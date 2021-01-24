@@ -2,11 +2,11 @@ const fs = require("fs");
 const loader = require("@assemblyscript/loader");
 const wasm = loader.instantiateSync(fs.readFileSync(__dirname + "/build/optimized.wasm"), {});
 
-var { inc, hello, multiply,
+var { inc, hello, multiply, Int32Array_ID,
   memory, 
   __getString, 
   __getArray,
-  __newArray, Int32Array_ID,
+  __newArray,
   __new,
   __retain,
   __release } = wasm.exports;
@@ -60,3 +60,33 @@ __release(arro);
 
 console.log(arro);
 
+// ////////////////////////////////////////////////
+// testing
+
+function sayHello(name) {
+	var length = name.length;
+
+	// allocate memory (usize, String (id=1))
+	var pt = __new(length << 1, 1);
+
+	// load bytes into memory
+	var bytes = new Uint16Array(memory.buffer);
+	for (var i = 0, p = pt >>> 1; i < length; ++i) 
+	  bytes[p + i] = name.charCodeAt(i);
+
+	// retain reference to object
+	var pti = __retain(pt);
+
+	// call wasm, pointer output
+	var pto = hello(pti);
+
+	__release(pti);
+
+	var str = __getString(pto);
+
+	__release(pto);
+
+	return str;
+}
+
+module.exports = { inc, sayHello };
