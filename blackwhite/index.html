@@ -1,0 +1,20 @@
+<html>
+<head>
+	<title>Black'n'White</title>
+</head>
+<body>
+
+<canvas id="canvas"  width="500" height="500" style="border: 3px solid green"></canvas>
+
+<script>
+	const ctx = document.getElementById('canvas').getContext('2d');
+
+	const img = new Image();
+	img.onload = function() {
+		ctx.drawImage(img, 0, 0, 500, 500);
+	};
+	img.src = './waterlily.png';
+</script>
+
+</body>
+</html>
