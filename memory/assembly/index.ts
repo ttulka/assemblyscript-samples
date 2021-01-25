@@ -16,4 +16,10 @@ export function multiply(matrix: Int32Array, x: i32): Int32Array {
 	return arr;
 }
 
+
+export function multiplyByTwo(matrix: Int32Array): Int32Array {
+  return matrix.slice()
+    .map(i => i * 2);
+}
+
 export const Int32Array_ID = idof<Int32Array>();

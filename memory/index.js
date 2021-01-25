@@ -2,7 +2,7 @@ const fs = require("fs");
 const loader = require("@assemblyscript/loader");
 const wasm = loader.instantiateSync(fs.readFileSync(__dirname + "/build/optimized.wasm"), {});
 
-var { inc, hello, multiply, Int32Array_ID,
+var { inc, hello, multiply, multiplyByTwo, Int32Array_ID,
   memory, 
   __getString, 
   __getArray,
@@ -50,15 +50,20 @@ console.log(str);
 console.log('Int32Array_ID', Int32Array_ID);
 
 // input array
-var arri = __retain(__newArray(Int32Array_ID, [1, 2, 3]));
+var arr = [1, 2, 3]
+var arri = __retain(__newArray(Int32Array_ID, arr));
 
 // call, output array
-var arro = __getArray(multiply(arri, 2));
+var arro1 = __getArray(multiply(arri, 2));
+var arro2 = __getArray(multiplyByTwo(arri));
 
 __release(arri);
-__release(arro);
+__release(arro1);
+__release(arro2);
 
-console.log(arro);
+console.log(arr);
+console.log(arro1);
+console.log(arro2);
 
 // ////////////////////////////////////////////////
 // testing
