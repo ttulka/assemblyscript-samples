@@ -1,5 +1,3 @@
-memory.grow(1);
-
 store<u8>(0, 42);
 
 export function updateMemory(): void {

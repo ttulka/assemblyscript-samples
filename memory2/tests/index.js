@@ -1,2 +1,4 @@
 const assert = require("assert");
-const myModule = require("..");
+const unit = require("..");
+
+assert(unit.memory(1), 66);
