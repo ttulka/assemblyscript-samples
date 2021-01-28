@@ -29,10 +29,9 @@ img.onload = () => {
         invert
       } = instance.exports;
 
-      let bytes = new Uint8ClampedArray(memory.buffer);
 
       // load bytes into memory
-      bytes = new Uint8ClampedArray(memory.buffer);
+      const bytes = new Uint8ClampedArray(memory.buffer);
 
       for (let i = 0; i < data.length; i++)
         bytes[i] = data[i];
