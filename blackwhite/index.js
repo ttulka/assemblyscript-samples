@@ -18,7 +18,7 @@ img.onload = () => {
   WebAssembly
     .instantiateStreaming(fetch('./build/optimized.wasm'), {
       env:{
-        memory, // npm run asbuild:untouched -- --importMemory
+        memory, // npm run asbuild:optimized -- --importMemory
         abort: (_msg, _file, line, column) => console.error("Abort", line, column)
       },
       index: { print: console.log }
@@ -28,7 +28,6 @@ img.onload = () => {
       const {
         invert
       } = instance.exports;
-
 
       // load bytes into memory
       const bytes = new Uint8ClampedArray(memory.buffer);

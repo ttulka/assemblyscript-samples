@@ -7,7 +7,7 @@ export function invert(width: i32, height: i32): void {
   for (let i = 0; i < width * height * 4; i += 4 /*rgba*/) {    
     store<u8>(
       i,
-      u8(255 - load<u8>(i))
+      255 - load<u8>(i)
     );
     store<u8>(
       i + 1,
