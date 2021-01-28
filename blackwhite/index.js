@@ -26,8 +26,7 @@ img.onload = () => {
     .then(({instance}) => {
       console.log(instance.exports);
       const {
-        invert,
-        memory
+        invert
       } = instance.exports;
 
       let bytes = new Uint8ClampedArray(memory.buffer);
