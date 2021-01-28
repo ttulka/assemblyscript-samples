@@ -9,7 +9,6 @@ img.onload = () => {
   ctx.drawImage(img, 0, 0, width, height);
 
   const imageData = ctx.getImageData(0, 0, width, height);
-  const argb = new Uint8Array(imageData.data.buffer);
   const data = imageData.data;
 
   const arraySize = (width * height * 4) >>> 0;
@@ -31,10 +30,10 @@ img.onload = () => {
         memory
       } = instance.exports;
 
-      let bytes = new Uint8Array(memory.buffer);
+      let bytes = new Uint8ClampedArray(memory.buffer);
 
       // load bytes into memory
-      bytes = new Uint8Array(memory.buffer);
+      bytes = new Uint8ClampedArray(memory.buffer);
 
       for (let i = 0; i < data.length; i++)
         bytes[i] = data[i];
@@ -43,7 +42,7 @@ img.onload = () => {
   
       // load data from memory
       for (let i = 0; i < bytes.length; i++) 
-         argb[i] = bytes[i];
+         data[i] = bytes[i];
 
       ctx.putImageData(imageData, 0, 0);
     });
