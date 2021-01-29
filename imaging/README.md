@@ -1,6 +1,8 @@
-# Imagiging with WebAssembly in AssemblyScript
+# Imaging with WebAssembly in AssemblyScript
 
 Demo project to show image manipulation with WebAssembly written in AssemblyScript.
+
+https://blog.ttulka.com/learning-webassembly-10-image-processing-in-assemblyscript
 
 ## Build
 ```sh
