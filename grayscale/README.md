@@ -2,6 +2,8 @@
 
 Demo project to show image transformation with WebAssembly written in AssemblyScript.
 
+https://blog.ttulka.com/learning-webassembly-10-image-processing-in-assemblyscript
+
 ## Build
 ```sh
 npm i
