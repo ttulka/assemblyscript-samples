@@ -14,7 +14,7 @@ async function loadWasm() {
 
   const wasm = await WebAssembly
     .instantiateStreaming(fetch('./build/optimized.wasm'), {
-      env:{
+      env: {
         memory, // npm run asbuild:optimized -- --importMemory
         abort: (_msg, _file, line, column) => console.error(`Abort at ${line}:${column}`),
         seed: () => new Date().getTime()

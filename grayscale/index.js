@@ -17,25 +17,20 @@ img.onload = () => {
 
   WebAssembly
     .instantiateStreaming(fetch('./build/optimized.wasm'), {
-      env:{
+      env: {
         memory, // npm run asbuild:optimized -- --importMemory
-        abort: (_msg, _file, line, column) => console.error("Abort", line, column)
-      },
-      index: { print: console.log }
+        abort: (_msg, _file, line, column) => console.error(`Abort at ${line}:${column}`),
+        seed: () => new Date().getTime()
+      }
     })
     .then(({instance}) => {
-      console.log(instance.exports);
-      const {
-        invert
-      } = instance.exports;
-
       // load bytes into memory
       const bytes = new Uint8ClampedArray(memory.buffer);
 
       for (let i = 0; i < data.length; i++)
         bytes[i] = data[i];
 
-      invert(width, height);
+      instance.exports.convertToGrayscale(width, height, 80);
   
       // load data from memory
       for (let i = 0; i < bytes.length; i++) 
