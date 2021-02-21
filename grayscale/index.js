@@ -33,7 +33,7 @@ img.onload = () => {
       instance.exports.convertToGrayscale(width, height, 80);
   
       // load data from memory
-      for (let i = 0; i < bytes.length; i++) 
+      for (let i = 0; i < data.length; i++) 
          data[i] = bytes[i];
 
       ctx.putImageData(imageData, 0, 0);

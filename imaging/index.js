@@ -51,7 +51,7 @@ function copyData(src, dest) {
 
 function writeImageData(imageData, bytes) {
   const data = imageData.data;
-  for (let i = 0; i < bytes.length; i++) 
+  for (let i = 0; i < data.length; i++) 
      data[i] = bytes[i];
 
   ctx.putImageData(imageData, 0, 0);
