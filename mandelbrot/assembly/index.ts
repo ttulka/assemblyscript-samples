@@ -4,8 +4,8 @@ export function mandelbrot(width: i32, height: i32, maxIterations: i32): void {
   for (let px = 0; px < width; px++) {
     for (let py = 0; py < height; py++) {
 
-      const x0 = scaleValue<f32>(<f32>px, 0.0, <f32>width, -2.5, 1.0);
-      const y0 = scaleValue<f32>(<f32>py, 0.0, <f32>height, -1.0, 1.0);
+      const x0 = scaleValue<f64>(<f64>px, 0.0, <f64>width, -2.15, 1.15);
+      const y0 = scaleValue<f64>(<f64>py, 0.0, <f64>height, -1.25, 1.25);
 
       let x = 0.0;
       let y = 0.0;
@@ -18,10 +18,9 @@ export function mandelbrot(width: i32, height: i32, maxIterations: i32): void {
         iteration++;
       }
 
-      const color = scaleValue<i32>(iteration, 0, MAX_ITERATIONS, 0, 255);
-      const b = color % 256;
-      const g = ((color - b) / 256) % 256;
-      const r = ((color -  b) / 256**2) - g / 256;
+      const r = <u8>(iteration / 0.15 % 255);
+      const g = <u8>(iteration / 0.25 % 255);
+      const b = <u8>(iteration / 0.75 % 255);
 
       // memory index
       const i = (px + py * width) * 4 /*rgb*/;
