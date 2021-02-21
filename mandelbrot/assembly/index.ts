@@ -1,0 +1,35 @@
+export function mandelbrot(width: i32, height: i32, maxIteration: i32): void {
+  const MAX_ITERATIONS = maxIteration | 255;
+  for (let px = 0; px < width; px++) {
+    for (let py = 0; py < height; py++) {
+
+      const x0 = scaleValue<f32>(<f32>px, 0.0, <f32>width, -2.5, 1.0);
+      const y0 = scaleValue<f32>(<f32>py, 0.0, <f32>height, -1.0, 1.0);
+
+      let x = 0.0;
+      let y = 0.0;
+      let iteration = 0;
+
+      while (x*x + y*y <= 4 && iteration < MAX_ITERATIONS) {
+        const temp = x*x - y*y + x0;
+        y = 2*x*y + y0;
+        x = temp;
+        iteration++;
+      }
+
+      const color = iteration;
+
+      // memory index
+      const i = (px + py * width) * 4 /*rgb*/;
+      
+      store<u8>(i,     color);
+      store<u8>(i + 1, color);
+      store<u8>(i + 2, color);
+      store<u8>(i + 3, 255);
+    }
+  }
+}
+
+function scaleValue<T extends number>(value: T, from0: T, from1: T, to0: T, to1: T): T {
+	return ((value - from0) / (from1 - from0)) * (to1 - to0) + to0;
+}
