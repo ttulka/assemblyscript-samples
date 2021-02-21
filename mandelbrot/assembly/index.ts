@@ -1,6 +1,5 @@
 export function mandelbrot(width: i32, height: i32, maxIterations: i32): void {
   const MAX_ITERATIONS = maxIterations || 255;
-  const COLORS = new Array<i32>()
 
   for (let px = 0; px < width; px++) {
     for (let py = 0; py < height; py++) {
