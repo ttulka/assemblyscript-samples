@@ -36,7 +36,12 @@ async function plotMandelbrot() {
   const colorB = document.querySelector('#colorB').value;
 
 
+  const timeMeasurementLabel = 'Plotting time';
+  console.time(timeMeasurementLabel);
+
   wasm.mandelbrot(width, height, iterations, colorR, colorG, colorB);
+
+  console.timeEnd(timeMeasurementLabel);
 
   writeImageData(imageData, bytes);
 }

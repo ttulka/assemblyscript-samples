@@ -20,16 +20,10 @@ export function mandelbrot(
       let y = 0.0;
       let iteration = 0;
 
-      let x2 = 0.0;
-      let y2 = 0.0;
-      let w = 0.0;
-
-      while (x2 + y2 <= 4 && iteration < MAX_ITERATIONS) {
-        x = x2 - y2 + x0;
-        y = w - x2 - y2 + y0;
-        x2 = x * x;
-        y2 = y * y;
-        w = (x + y) * (x + y);
+      while (x * x + y * y <= 4 && iteration < MAX_ITERATIONS) {
+        const temp = x * x - y * y + x0;
+        y = 2 * x * y + y0;
+        x = temp;
         iteration++;
       }
 
