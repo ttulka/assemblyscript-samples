@@ -2,13 +2,39 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const [width, height] = [canvas.width, canvas.height];
 
+// initial plotting
 plotMandelbrot();
 
+// control elements
 document.querySelectorAll('.control').forEach(c => c.onchange = async () => {
   canvas.style.filter = 'blur(3px)';
   await plotMandelbrot();
   canvas.style.filter = 'initial';
 });
+
+// zoom view
+const zoomView = { width: 195, height: 138 };
+const zoomCanvas = document.createElement('CANVAS');
+zoomCanvas.width = width;
+zoomCanvas.height = height;
+zoomCanvas.style.position = 'absolute';
+canvas.parentElement.appendChild(zoomCanvas);
+
+const zoomViewCtx = zoomCanvas.getContext('2d');
+
+zoomViewCtx.strokeStyle = 'lime';
+zoomCanvas.onmousemove = e => {
+  zoomViewCtx.clearRect(0, 0, width, height);
+  zoomViewCtx.strokeRect(e.clientX - zoomView.width / 2, e.clientY - zoomView.height / 2, zoomView.width, zoomView.height);
+};
+zoomCanvas.onmouseout = () => zoomViewCtx.clearRect(0, 0, width, height);
+zoomCanvas.onclick = e => {
+  
+};
+
+// /////////////////////////////////////////////////////////////////////////////////////////////////
+// Wasm glue functions
+// /////////////////////////////////////////////////////////////////////////////////////////////////
 
 async function loadWasm() {
   const arraySize = (width * height * 4) >>> 0;
