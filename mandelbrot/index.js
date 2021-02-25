@@ -4,6 +4,12 @@ const [width, height] = [canvas.width, canvas.height];
 
 plotMandelbrot();
 
+document.querySelectorAll('.control').forEach(c => c.onchange = async () => {
+  canvas.style.filter = 'blur(3px)';
+  await plotMandelbrot();
+  canvas.style.filter = 'initial';
+});
+
 async function loadWasm() {
   const arraySize = (width * height * 4) >>> 0;
   const nPages = ((arraySize + 0xffff) & ~0xffff) >>> 16;
@@ -24,7 +30,13 @@ async function plotMandelbrot() {
   const imageData = ctx.getImageData(0, 0, width, height);
   const bytes = new Uint8ClampedArray(wasm.memory.buffer);
 
-  wasm.mandelbrot(width, height);
+  const iterations = document.querySelector('#iterations').value;
+  const colorR = document.querySelector('#colorR').value;
+  const colorG = document.querySelector('#colorG').value;
+  const colorB = document.querySelector('#colorB').value;
+
+
+  wasm.mandelbrot(width, height, iterations, colorR, colorG, colorB);
 
   writeImageData(imageData, bytes);
 }

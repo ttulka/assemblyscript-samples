@@ -5,9 +5,33 @@
 <body>
 
 <div style="display: flex">
-	<canvas id="canvas" width="1300" height="920" style="border: 3px solid green"></canvas>
+	<canvas id="canvas" width="975" height="690" style="border: 3px solid green"></canvas>
 	
-	<div style="padding: 1rem"></div>
+	<div style="padding: 1rem">
+		<fieldset>
+  			<legend>Iterations:</legend>
+			<p>
+				<label for="iterations">Max:</label>
+				<input type="range" min="10" max="10000" value="1000" id="iterations" class="control">
+			</p>
+		</fieldset>
+
+		<fieldset>
+  			<legend>Colors:</legend>
+			<p>
+				<label for="colorR">R:</label>
+				<input type="range" min="1" max="10" value="7" id="colorR" class="control">
+			</p>
+			<p>
+				<label for="colorG">G:</label>
+				<input type="range" min="1" max="10" value="2" id="colorG" class="control">
+			</p>
+			<p>
+				<label for="colorB">B:</label>
+				<input type="range" min="1" max="10" value="4" id="colorB" class="control">
+			</p>
+		</fieldset>
+	</div>
 </div>
 
 <script src="index.js"></script>
