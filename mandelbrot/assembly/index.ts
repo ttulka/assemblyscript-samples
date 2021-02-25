@@ -4,9 +4,9 @@ export function mandelbrot(
 
   const MAX_ITERATIONS = maxIterations || 1000;
 
-  const R_MAGNITUDE = min(max(rMagnitude || 2, 1), 10);
-  const G_MAGNITUDE = min(max(gMagnitude || 4, 1), 10);
-  const B_MAGNITUDE = min(max(bMagnitude || 7, 1), 10);
+  const R_MAGNITUDE = min(max(rMagnitude || 7, 1), 10);
+  const G_MAGNITUDE = min(max(gMagnitude || 2, 1), 10);
+  const B_MAGNITUDE = min(max(bMagnitude || 4, 1), 10);
 
   const MAX_MAGNITUDE = Math.log(MAX_ITERATIONS) * 3;
 
