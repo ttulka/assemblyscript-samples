@@ -1,5 +1,5 @@
 export function mandelbrot(width: i32, height: i32, maxIterations: i32): void {
-  const MAX_ITERATIONS = maxIterations || 255;
+  const MAX_ITERATIONS = maxIterations || 1000;
 
   for (let px = 0; px < width; px++) {
     for (let py = 0; py < height; py++) {
@@ -18,16 +18,16 @@ export function mandelbrot(width: i32, height: i32, maxIterations: i32): void {
         iteration++;
       }
 
-      const r = <u8>(iteration / 0.15 % 255);
-      const g = <u8>(iteration / 0.25 % 255);
-      const b = <u8>(iteration / 0.75 % 255);
+      const r = <u8>(iteration / 0.1 % 255);
+      const g = <u8>(iteration / 0.3 % 255);
+      const b = <u8>(iteration / 0.5 % 255);
 
       // memory index
       const i = (px + py * width) * 4 /*rgb*/;
       
-      store<u8>(i,     r);
-      store<u8>(i + 1, g);
-      store<u8>(i + 2, b);
+      store<u8>(i,     255 - r);
+      store<u8>(i + 1, 255 - g);
+      store<u8>(i + 2, 255 - b);
       store<u8>(i + 3, 255);
     }
   }
