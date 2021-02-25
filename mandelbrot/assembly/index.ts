@@ -1,5 +1,14 @@
-export function mandelbrot(width: i32, height: i32, maxIterations: i32): void {
+export function mandelbrot(
+    width: i32, height: i32, maxIterations: i32, 
+    rMagnitude: u32, gMagnitude: u32, bMagnitude: u32): void {
+
   const MAX_ITERATIONS = maxIterations || 1000;
+
+  const R_MAGNITUDE = min(max(rMagnitude || 10, 1), 10);
+  const G_MAGNITUDE = min(max(gMagnitude || 5, 1), 10);
+  const B_MAGNITUDE = min(max(bMagnitude || 1, 1), 10);
+
+  const MAX_MAGNITUDE = Math.log10(MAX_ITERATIONS) * 5;
 
   for (let px = 0; px < width; px++) {
     for (let py = 0; py < height; py++) {
@@ -18,16 +27,16 @@ export function mandelbrot(width: i32, height: i32, maxIterations: i32): void {
         iteration++;
       }
 
-      const r = <u8>(iteration / 0.1 % 255);
-      const g = <u8>(iteration / 0.3 % 255);
-      const b = <u8>(iteration / 0.5 % 255);
+      const r = scaleValue<f64>(Math.log10(iteration) * R_MAGNITUDE, 0, MAX_MAGNITUDE, 0, 255);
+      const g = scaleValue<f64>(Math.log10(iteration) * G_MAGNITUDE, 0, MAX_MAGNITUDE, 0, 255);
+      const b = scaleValue<f64>(Math.log10(iteration) * B_MAGNITUDE, 0, MAX_MAGNITUDE, 0, 255);
 
       // memory index
       const i = (px + py * width) * 4 /*rgb*/;
       
-      store<u8>(i,     255 - r);
-      store<u8>(i + 1, 255 - g);
-      store<u8>(i + 2, 255 - b);
+      store<u8>(i,     r as u8);
+      store<u8>(i + 1, g as u8);
+      store<u8>(i + 2, b as u8);
       store<u8>(i + 3, 255);
     }
   }
