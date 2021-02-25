@@ -4,11 +4,11 @@ export function mandelbrot(
 
   const MAX_ITERATIONS = maxIterations || 1000;
 
-  const R_MAGNITUDE = min(max(rMagnitude || 10, 1), 10);
-  const G_MAGNITUDE = min(max(gMagnitude || 5, 1), 10);
-  const B_MAGNITUDE = min(max(bMagnitude || 1, 1), 10);
+  const R_MAGNITUDE = min(max(rMagnitude || 2, 1), 10);
+  const G_MAGNITUDE = min(max(gMagnitude || 4, 1), 10);
+  const B_MAGNITUDE = min(max(bMagnitude || 7, 1), 10);
 
-  const MAX_MAGNITUDE = Math.log10(MAX_ITERATIONS) * 5;
+  const MAX_MAGNITUDE = Math.log(MAX_ITERATIONS) * 3;
 
   for (let px = 0; px < width; px++) {
     for (let py = 0; py < height; py++) {
@@ -27,9 +27,9 @@ export function mandelbrot(
         iteration++;
       }
 
-      const r = scaleValue<f64>(Math.log10(iteration) * R_MAGNITUDE, 0, MAX_MAGNITUDE, 0, 255);
-      const g = scaleValue<f64>(Math.log10(iteration) * G_MAGNITUDE, 0, MAX_MAGNITUDE, 0, 255);
-      const b = scaleValue<f64>(Math.log10(iteration) * B_MAGNITUDE, 0, MAX_MAGNITUDE, 0, 255);
+      const r = scaleValue<f64>(Math.log(iteration) * R_MAGNITUDE, 0, MAX_MAGNITUDE, 0, 255);
+      const g = scaleValue<f64>(Math.log(iteration) * G_MAGNITUDE, 0, MAX_MAGNITUDE, 0, 255);
+      const b = scaleValue<f64>(Math.log(iteration) * B_MAGNITUDE, 0, MAX_MAGNITUDE, 0, 255);
 
       // memory index
       const i = (px + py * width) * 4 /*rgb*/;
