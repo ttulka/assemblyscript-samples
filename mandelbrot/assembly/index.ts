@@ -1,20 +1,37 @@
 export function mandelbrot(
     width: i32, height: i32, maxIterations: i32, 
-    rMagnitude: u32, gMagnitude: u32, bMagnitude: u32): void {
+    rMagnitude: u32, gMagnitude: u32, bMagnitude: u32,
+    offsetX: u32, offsetY: u32, zoom: f32): void {
 
   const MAX_ITERATIONS = maxIterations || 1000;
 
-  const R_MAGNITUDE = min(max(rMagnitude || 7, 1), 10);
-  const G_MAGNITUDE = min(max(gMagnitude || 2, 1), 10);
-  const B_MAGNITUDE = min(max(bMagnitude || 4, 1), 10);
+  const R_MAGNITUDE = rMagnitude || 7;
+  const G_MAGNITUDE = gMagnitude || 2;
+  const B_MAGNITUDE = bMagnitude || 4;
 
-  const MAX_MAGNITUDE = Math.log(MAX_ITERATIONS) * 3;
+  const MAX_MAGNITUDE = Math.log(MAX_ITERATIONS) * Math.PI;
 
+  const OFFSET_X = offsetX || 0;
+  const OFFSET_Y = offsetY || 0;
+  const ZOOM = zoom || 1.0;
+  
+  const X1 = -2.15, X2 = 1.15;
+  const Y1 = -1.25, Y2 = 1.25;
+
+  const RATIO_X = (-1.0 * X1 + X2) / width;
+  const RATIO_Y = (-1.0 * Y1 + Y2) / height;
+
+  const OFFSET_X_ = OFFSET_X * RATIO_X;
+  const OFFSET_Y_ = OFFSET_Y * RATIO_Y;
+  
+  const X1_ = X1 + OFFSET_X_, X2_ = X1_ + <f32>width * ZOOM * RATIO_X;
+  const Y1_ = Y1 + OFFSET_Y_, Y2_ = Y1_ + <f32>height * ZOOM * RATIO_Y;
+  
   for (let px = 0; px < width; px++) {
     for (let py = 0; py < height; py++) {
 
-      const x0 = scaleValue<f64>(<f64>px, 0.0, <f64>width, -2.15, 1.15);
-      const y0 = scaleValue<f64>(<f64>py, 0.0, <f64>height, -1.25, 1.25);
+      const x0 = scaleValue<f64>(<f64>px, 0.0, <f64>width, X1_, X2_);
+      const y0 = scaleValue<f64>(<f64>py, 0.0, <f64>height, Y1_, Y2_);
 
       let x = 0.0;
       let y = 0.0;

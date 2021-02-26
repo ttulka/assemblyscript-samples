@@ -2,12 +2,12 @@
 <head>
   <title>Mandelbrot Set</title>
 </head>
-<body>
+<body style="background-color:gray; padding: 2rem;">
 
 <h1>Mandelbrot Set in WebAssembly</h1>
 
 <div style="display: flex">
-	<canvas id="canvas" width="975" height="690"></canvas>
+	<canvas id="canvas" width="780" height="552"></canvas>
 	
 	<div style="padding: 1rem">
 		<div>
@@ -36,14 +36,10 @@
 				</p>
 			</fieldset>
 		</div>
-		<div>
-			<p>
-				<button id="reset">Reset</button>
-			</p>
-		</div>
 	</div>
 </div>
 
+<script src='https://cdn.jsdelivr.net/npm/big.js@6.0.0/big.min.js'></script>
 <script src="index.js"></script>
 
 </body>

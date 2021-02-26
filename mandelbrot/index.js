@@ -2,33 +2,21 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const [width, height] = [canvas.width, canvas.height];
 
-let offsetX = 0, offsetY = 0, ratio = 1.0;
+let offsetX = new Big(0.0), 
+    offsetY = new Big(0.0), 
+    zoom = new Big(1.0);
 
 // initial plotting
+
 plotMandelbrot();
 
 // control elements
-document.querySelector('#reset').onclick = () => redrawCanvas(plotMandelbrot);
-document.querySelectorAll('.control').forEach(c => c.onchange = () => redrawCanvas(drawCanvas));
 
-async function drawCanvas() {
-  const iterations = document.querySelector('#iterations').value;
-  const colorR = document.querySelector('#colorR').value;
-  const colorG = document.querySelector('#colorG').value;
-  const colorB = document.querySelector('#colorB').value;
-
-  await plotMandelbrot(iterations, colorR, colorG, colorB, offsetX, offsetY, ratio);
-}
-
-canvas.style.overflow = 'hidden';
-
-async function redrawCanvas(plottingFn) {
-  canvas.style.filter = 'blur(3px)';
-  await plottingFn();
-  canvas.style.filter = 'initial';
-}
+document.querySelectorAll('.control')
+  .forEach(c => c.onchange = drawCanvas);
 
 // zoom view
+
 const zoomView = { width: 195, height: 138 };
 const zoomCanvas = document.createElement('CANVAS');
 zoomCanvas.width = width;
@@ -39,20 +27,21 @@ canvas.parentElement.appendChild(zoomCanvas);
 
 const zoomViewCtx = zoomCanvas.getContext('2d');
 
-ratio = zoomView.width / width;
+const ZOOM = new Big(zoomView.width / width);
 
 zoomViewCtx.strokeStyle = 'yellow';
 zoomCanvas.onmousemove = e => {
-  offsetX = Math.min(Math.max(Math.floor(e.offsetX - zoomView.width / 2), 0), width - zoomView.width);
-  offsetY = Math.min(Math.max(Math.floor(e.offsetY - zoomView.height / 2), 0), height - zoomView.height);
-
   zoomViewCtx.clearRect(0, 0, width, height);
-  zoomViewCtx.strokeRect(offsetX, offsetY, zoomView.width, zoomView.height);
+  zoomViewCtx.strokeRect(...offsets(e), zoomView.width, zoomView.height);
 };
 zoomCanvas.onmouseout = () => zoomViewCtx.clearRect(0, 0, width, height);
 zoomCanvas.onclick = e => {
-  
-  console.log(offsetX, offsetY, ratio);
+  const[x, y] = offsets(e);
+  offsetX = offsetX.plus(zoom.mul(x));
+  offsetY = offsetY.plus(zoom.mul(y));
+  zoom = zoom.mul(ZOOM);
+  console.log(offsetX.toNumber(), offsetY.toNumber(), zoom.toNumber());
+  drawCanvas();
 };
 zoomCanvas.onmousedown = e => {
   if (e.button === 2) { // right mouse button
@@ -61,6 +50,28 @@ zoomCanvas.onmousedown = e => {
 }
 canvas.onmousemove = e => {
   zoomCanvas.style.display = 'initial';
+}
+
+// displaying
+
+async function drawCanvas() {
+  canvas.style.filter = 'blur(3px)';
+
+  const iterations = document.querySelector('#iterations').value;
+  const colorR = document.querySelector('#colorR').value;
+  const colorG = document.querySelector('#colorG').value;
+  const colorB = document.querySelector('#colorB').value;
+
+  await plotMandelbrot(iterations, colorR, colorG, colorB, offsetX.toNumber(), offsetY.toNumber(), zoom.toNumber());
+
+  canvas.style.filter = 'initial';
+}
+
+function offsets(e) {
+  return [
+    Math.min(Math.max(Math.floor(e.offsetX - zoomView.width / 2), 0), width - zoomView.width),
+    Math.min(Math.max(Math.floor(e.offsetY - zoomView.height / 2), 0), height - zoomView.height)
+  ];
 }
 
 // /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,7 +92,7 @@ async function loadWasm() {
     return wasm.instance.exports;
 }
 
-async function plotMandelbrot(iterations, colorR, colorG, colorB, offsetX, offsetY, ratio) {
+async function plotMandelbrot(iterations, colorR, colorG, colorB, offsetX, offsetY, zoom) {
   const wasm = await loadWasm();
 
   const imageData = ctx.getImageData(0, 0, width, height);
@@ -90,7 +101,7 @@ async function plotMandelbrot(iterations, colorR, colorG, colorB, offsetX, offse
   const timeMeasurementLabel = 'Plotting time';
   console.time(timeMeasurementLabel);
 
-  wasm.mandelbrot(width, height, iterations, colorR, colorG, colorB, offsetX, offsetY, ratio);
+  wasm.mandelbrot(width, height, iterations, colorR, colorG, colorB, offsetX, offsetY, zoom);
 
   console.timeEnd(timeMeasurementLabel);
 
