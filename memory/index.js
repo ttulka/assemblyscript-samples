@@ -8,8 +8,8 @@ var { inc, hello, multiply, multiplyByTwo, Int32Array_ID,
   __getArray,
   __newArray,
   __new,
-  __retain,
-  __release } = wasm.exports;
+  __pin,
+  __unpin } = wasm.exports;
 
 // ////////////////////////////////////////////////
 // integers
@@ -31,16 +31,16 @@ for (var i = 0, p = pt >>> 1; i < length; ++i)
   bytes[p + i] = input.charCodeAt(i);
 
 // retain reference to object
-var pti = __retain(pt);
+var pti = __pin(pt);
 
 // call wasm, pointer output
-var pto = hello(pti);
+var pto = __pin(hello(pti));
 
-__release(pti);
+__unpin(pti);
 
 var str = __getString(pto);
 
-__release(pto);
+__unpin(pto);
 
 console.log(str);
 
@@ -51,15 +51,15 @@ console.log('Int32Array_ID', Int32Array_ID);
 
 // input array
 var arr = [1, 2, 3]
-var arri = __retain(__newArray(Int32Array_ID, arr));
+var arri = __pin(__newArray(Int32Array_ID, arr));
 
 // call, output array
 var arro1 = __getArray(multiply(arri, 2));
 var arro2 = __getArray(multiplyByTwo(arri));
 
-__release(arri);
-__release(arro1);
-__release(arro2);
+__unpin(arri);
+__unpin(arro1);
+__unpin(arro2);
 
 console.log(arr);
 console.log(arro1);
@@ -80,16 +80,16 @@ function sayHello(name) {
 	  bytes[p + i] = name.charCodeAt(i);
 
 	// retain reference to object
-	var pti = __retain(pt);
+	var pti = __pin(pt);
 
 	// call wasm, pointer output
-	var pto = hello(pti);
+	var pto = __pin(hello(pti));
 
-	__release(pti);
+	__unpin(pti);
 
 	var str = __getString(pto);
 
-	__release(pto);
+	__unpin(pto);
 
 	return str;
 }
