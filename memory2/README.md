@@ -1,7 +1,7 @@
 ## Build
 
 ```sh
-npm run asbuild:optimized -- --exportRuntime
+npm run asbuild
 ```
 
 ## Run

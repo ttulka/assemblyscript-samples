@@ -13,10 +13,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@assemblyscript/loader": "^0.17.14"
+    "@assemblyscript/loader": "^0.18.11"
   },
   "devDependencies": {
-    "assemblyscript": "^0.17.14",
+    "assemblyscript": "^0.18.11",
     "local-web-server": "^4.2.1"
   }
 }
