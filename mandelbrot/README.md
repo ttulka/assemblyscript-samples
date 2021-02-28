@@ -5,7 +5,7 @@ Demo project to show plotting Manderbrot set with WebAssembly written in Assembl
 ## Build
 ```sh
 npm i
-npm run asbuild:optimized -- --importMemory
+npm run asbuild:optimized
 ```
 
 ## Run

@@ -1,3 +1,5 @@
+export declare function callback(index: i32, r: i32, g: i32, b: i32): void;
+
 export function mandelbrot(
     width: i32, height: i32, maxIterations: i32, 
     rMagnitude: u32, gMagnitude: u32, bMagnitude: u32,
@@ -50,11 +52,8 @@ export function mandelbrot(
 
       // memory index
       const i = (px + py * width) * 4 /*rgb*/;
-      
-      store<u8>(i,     r as u8);
-      store<u8>(i + 1, g as u8);
-      store<u8>(i + 2, b as u8);
-      store<u8>(i + 3, 255);
+
+      callback(i, r as u8, g as u8, b as u8);; 
     }
   }
 }

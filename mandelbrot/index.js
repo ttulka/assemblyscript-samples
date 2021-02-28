@@ -78,25 +78,26 @@ function offsets(e) {
 // Wasm glue functions
 // /////////////////////////////////////////////////////////////////////////////////////////////////
 
-async function loadWasm() {
-  const arraySize = (width * height * 4) >>> 0;
-  const nPages = ((arraySize + 0xffff) & ~0xffff) >>> 16;
-  const memory = new WebAssembly.Memory({ initial: nPages });
-
+async function loadWasm(callback) {
   const wasm = await WebAssembly
     .instantiateStreaming(fetch('./build/optimized.wasm'), {
+      index: { callback },
       env: {
-        memory, // npm run asbuild:optimized -- --importMemory
         abort: (_msg, _file, line, column) => console.error(`Abort at ${line}:${column}`)
       }});
     return wasm.instance.exports;
 }
 
 async function plotMandelbrot(iterations, colorR, colorG, colorB, offsetX, offsetY, zoom) {
-  const wasm = await loadWasm();
-
   const imageData = ctx.getImageData(0, 0, width, height);
-  const bytes = new Uint8ClampedArray(wasm.memory.buffer);
+  const data = imageData.data;
+
+  const wasm = await loadWasm((i, r, g, b) => {
+    data[i]     = r;
+    data[i + 1] = g;
+    data[i + 2] = b;
+    data[i + 3] = 255;
+  });
 
   const timeMeasurementLabel = 'Plotting time';
   console.time(timeMeasurementLabel);
@@ -104,14 +105,6 @@ async function plotMandelbrot(iterations, colorR, colorG, colorB, offsetX, offse
   wasm.mandelbrot(width, height, iterations, colorR, colorG, colorB, offsetX, offsetY, zoom);
 
   console.timeEnd(timeMeasurementLabel);
-
-  writeImageData(imageData, bytes);
-}
-
-function writeImageData(imageData, bytes) {
-  const data = imageData.data;
-  for (let i = 0; i < data.length; i++) 
-    data[i] = bytes[i];
 
   ctx.putImageData(imageData, 0, 0);
 }
