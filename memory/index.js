@@ -7,10 +7,7 @@ var { inc, hello, multiply, multiplyByTwo, Int32Array_ID,
   __getString, 
   __newString, 
   __getArray,
-  __newArray,
-  __new,
-  __pin, __collect,
-  __unpin } = wasm.exports;
+  __newArray } = wasm.exports;
 
 // ////////////////////////////////////////////////
 // integers
@@ -26,11 +23,7 @@ var input = "Tomas";
 var pti = __newString(input);
 
 // call wasm, pointer output
-var pto = __pin(hello(pti));
-
-var str = __getString(pto);
-
-__unpin(pto);
+var str = __getString(hello(pti));
 
 console.log(str);
 
@@ -44,15 +37,12 @@ var arr = [1, 2, 3]
 var arri = __newArray(Int32Array_ID, arr);
 
 // call, output array
-var arro1 = __pin(multiply(arri, 2));
-var arro2 = __pin(multiplyByTwo(arri));
+var arro1 = multiply(arri, 2);
+var arro2 = multiplyByTwo(arri);
 
 console.log(arr);
 console.log(__getArray(arro1));
 console.log(__getArray(arro2));
-
-__unpin(arro1);
-__unpin(arro2);
 
 // ////////////////////////////////////////////////
 // testing
