@@ -61,12 +61,8 @@ function sayHello(name) {
 	// retain reference to object
 	var pti = __newString(name);
 
-	// call wasm, pointer output
-	var pto = __pin(hello(pti));
-
-	var str = __getString(pto);
-
-	__unpin(pto);
+	// call wasm, copy to string
+	var str = __getString(hello(pti));
 
 	return str;
 }
