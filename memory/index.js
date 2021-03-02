@@ -49,8 +49,8 @@ const pti = __pin(pt);
 // call wasm
 const pto = __pin(hello(pti));
 
-const SIZE_OFFSET = 4;
-const olength = new Uint32Array(memory.buffer)[pto - SIZE_OFFSET >>> 2];
+const SIZE_OFFSET = -4;
+const olength = new Uint32Array(memory.buffer)[pto + SIZE_OFFSET >>> 2];
 console.log("olength", olength)
 const obytes = new Uint8Array(memory.buffer, pto, olength);
 const str = new TextDecoder('utf8').decode(obytes);
