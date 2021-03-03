@@ -1,66 +1,9 @@
-const { strictEqual } = require('assert');
-const { toStr } = require('..');
+[
+    'toString',
+    'toNumber',
+    'cmp',
+    'plus'
 
-strictEqual(toStr(123), '123');
-strictEqual(toStr(123.456), '123.456');
-strictEqual(toStr(-123.456), '-123.456');
-strictEqual(toStr(0.456), '0.456');
-strictEqual(toStr(-0.456), '-0.456');
-strictEqual(toStr(1), '1');
-strictEqual(toStr(-1), '-1');
-strictEqual(toStr(0), '0');
-strictEqual(toStr(1.234e+2), '123.4');
-strictEqual(toStr(1e+0), '1');
-strictEqual(toStr(1e+1), '10');
-strictEqual(toStr(1e+2), '100');
-strictEqual(toStr(1e+3), '1000');
-strictEqual(toStr(1e+4), '10000');
-strictEqual(toStr(1e+5), '100000');
-strictEqual(toStr(1e+6), '1000000');
-strictEqual(toStr(1e+7), '10000000');
-strictEqual(toStr(1e+8), '100000000');
-strictEqual(toStr(1e+9), '1000000000');
-strictEqual(toStr(1e+10), '10000000000');
-strictEqual(toStr(1e+11), '100000000000');
-strictEqual(toStr(1e+12), '1000000000000');
-strictEqual(toStr(1e+13), '10000000000000');
-strictEqual(toStr(1e+14), '100000000000000');
-strictEqual(toStr(1e+15), '1000000000000000');
-strictEqual(toStr(1e+16), '10000000000000000');
-strictEqual(toStr(1e+17), '100000000000000000');
-strictEqual(toStr(1e+18), '1000000000000000000');
-strictEqual(toStr(1e+19), '10000000000000000000');
-strictEqual(toStr(1e+20), '100000000000000000000');
-strictEqual(toStr(-1e+20), '-100000000000000000000');
-strictEqual(toStr(-1e+21), '-1e+21');
-strictEqual(toStr(1e+21), '1e+21');
-strictEqual(toStr(1e+22), '1e+22');
-strictEqual(toStr(1.234e+2), '123.4');
-strictEqual(toStr(1.234e-2), '0.01234');
-strictEqual(toStr(1e-0), '1');
-strictEqual(toStr(1e-1), '0.1');
-strictEqual(toStr(1e-2), '0.01');
-strictEqual(toStr(1e-3), '0.001');
-strictEqual(toStr(1e-4), '0.0001');
-strictEqual(toStr(1e-5), '0.00001');
-strictEqual(toStr(1e-6), '0.000001');
-strictEqual(toStr(-1e-6), '-0.000001');
-strictEqual(toStr(-1e-7), '-1e-7');
-strictEqual(toStr(1e-7), '1e-7');
-strictEqual(toStr(1e-8), '1e-8');
-strictEqual(toStr(1e-9), '1e-9');
-strictEqual(toStr(1e-10), '1e-10');
-strictEqual(toStr(1e-11), '1e-11');
-strictEqual(toStr(1e-12), '1e-12');
-strictEqual(toStr(1e-13), '1e-13');
-strictEqual(toStr(1e-14), '1e-14');
-strictEqual(toStr(1e-15), '1e-15');
-strictEqual(toStr(1e-16), '1e-16');
-strictEqual(toStr(1e-17), '1e-17');
-strictEqual(toStr(1e-18), '1e-18');
-strictEqual(toStr(1e-19), '1e-19');
-strictEqual(toStr(1e-20), '1e-20');
-strictEqual(toStr(1e-21), '1e-21');
-strictEqual(toStr(1e-22), '1e-22');
+].forEach(method => require('./' + method));
 
 console.log('tests ok');
