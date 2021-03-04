@@ -11,12 +11,14 @@ export default class Big {
      * The positive exponent (PE) at and above which toString returns exponential notation.
      * 1000000 is the maximum recommended exponent value of a Big, but this limit is not enforced.
      */
+    @lazy
     static PE: i32 = 21;        // 0 to 1000000
 
     /**
      * The negative exponent (NE) at and beneath which toString returns exponential notation.
      * -1000000 is the minimum recommended exponent value of a Big.
      */
+    @lazy
     static NE: i32 = -7;        // 0 to -1000000
 
     s: i8;          // sign
@@ -25,7 +27,7 @@ export default class Big {
 
     /**
      * Default contructor. 
-     * See {ofBig}, {ofString}, and {ofNumber} for other options.
+     * See {of} for other options.
      */
     constructor(s: i8, e: i32, c: Array<u8>) {
         this.s = s;
@@ -34,30 +36,20 @@ export default class Big {
     }
 
     /**
-     * Contructs a new {Big} instance from another instance.
-     * @param n the {Big} instance to construct from
+     * Creates a new {Big} instance from generic type T
+     * @param  n the number as {Big}, {string}, or {number}
+     * @return the new {Big} instance
      */
-    static ofBig(n: Big): Big {
-        return new Big(n.s, n.e, n.c.slice());
-    }
-
-    /**
-     * Contructs a new {Big} instance from a string.
-     * @param n the number as string
-     */
-    static ofString(n: string): Big {
-        return new BigOfString(n);
-    }
-
-    /**
-     * Contructs a new {Big} instance from a number.
-     * @param n the number
-     */
-    static ofNumber(n: number): Big {
-        if (!Number.isFinite(n)) {
-            throw new TypeError('Invalid value ' + n.toString());
+    static of<T>(n: T): Big {
+        if (n instanceof Big) return new Big(n.s, n.e, n.c.slice())
+        if (n instanceof string) return new BigOfString(<string>n);
+        if (n instanceof number) {
+            if (!Number.isFinite(n)) {
+                throw new TypeError('Invalid value ' + n.toString());
+            }
+            return Big.of(n.toString());
         }
-        return Big.ofString(n.toString());
+        throw new TypeError('Unsupported generic type ' + nameof<T>(n));
     }
 
     /**
@@ -79,7 +71,9 @@ export default class Big {
     /**
      * Return a new Big whose value is the value of this Big plus the value of Big y.
      */
+    @operator('+')
     plus(y: Big): Big {
+        //let y = n instanceof Big ? n : Big.of(n.toString());
         let e: i32, k: i32, t: Array<u8>,
             x = this;
 
@@ -98,7 +92,7 @@ export default class Big {
         if (!xc[0] || !yc[0]) {
             if (!yc[0]) {
                 if (xc[0]) {
-                    y = Big.ofBig(x);
+                    y = Big.of(x);
                 } else {
                     y.s = x.s;
                 }
@@ -156,6 +150,7 @@ export default class Big {
     /**
      * Return a new Big whose value is the value of this Big minus the value of Big y.
      */
+    @operator('-')
     minus(y: Big): Big {
         if (this.eq(y)) return Big.zero();
 
@@ -180,7 +175,7 @@ export default class Big {
             if (yc[0]) {
                 y.s = -ys;
             } else if (xc[0]) {
-                y = Big.ofBig(x);
+                y = Big.of(x);
             } else {
                 y.s = 1;
             }
@@ -263,15 +258,41 @@ export default class Big {
     }
 
     /**
+     * Return a new instance of {Big} with the negative value of this Big.
+     */
+    @operator.prefix('-')
+    neg(): Big {
+        return new Big(-this.s, this.e, this.c.slice());
+    }
+
+    /**
+     * Return a new instance of {Big} with the value of this Big.
+     */
+    @operator.prefix('+')
+    pos(): Big {
+        return new Big(this.s, this.e, this.c.slice());
+    }
+
+    /**
      * Return true if the value of this Big is equal to the value of Big y, otherwise return false.
      */
+    @operator('==')
     eq(y: Big): boolean {
-        return this.cmp(y) === 0;
+        return this.cmp(y) == 0;
+    }
+
+    /**
+     * Return true if the value of this Big is not equal to the value of Big y, otherwise return false.
+     */
+    @operator('!=')
+    neq(y: Big): boolean {
+        return this.cmp(y) != 0;
     }
 
     /**
      * Returns true if the value of this Big is greater than the value of Big y, otherwise false.
      */
+    @operator('>')
     gt(y: Big): boolean {
         return this.cmp(y) > 0;
     }
@@ -279,6 +300,7 @@ export default class Big {
     /**
      * Returns true if the value of this Big is greater than or equal to the value of Big y, otherwise false.
      */
+    @operator('>=')
     gte(y: Big): boolean {
         return this.cmp(y) > -1;
     }
@@ -286,6 +308,7 @@ export default class Big {
     /**
      * Returns true if the value of this Big is less than the value of Big y, otherwise false.
      */
+    @operator('<')
     lt(y: Big): boolean {
         return this.cmp(y) < 0;
     }
@@ -293,6 +316,7 @@ export default class Big {
     /**
      * Returns true if the value of this Big is less than or equal to the value of Big y, otherwise false.
      */
+    @operator('<=')
     lte(y: Big): boolean {
         return this.cmp(y) < 1;
     }
@@ -340,7 +364,7 @@ export default class Big {
         const s = this.toString();
         const n = F64.parseFloat(s);
 
-        if (!this.eq(Big.ofNumber(n))) {
+        if (!this.eq(Big.of(n))) {
             throw new RangeError('Out of float64 range: ' + s);
         }
 
@@ -356,8 +380,12 @@ export default class Big {
 
     /**
      * Converts this {Big} instance to {string}.
+     * @param radix currently ignored here
      */
-    toString(): string {
+    toString(radix: number = 10): string {
+        if (radix && radix != 10) {
+            throw new Error('Currently only radix 10 is supported: ' + radix.toString());
+        }
         return this.__stringify(this.e <= Big.NE || this.e >= Big.PE, !!this.c[0]);
     }
 

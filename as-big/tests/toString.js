@@ -265,3 +265,6 @@ throws(() => stringToString('+e12.34'));
 throws(() => stringToString('1-1'));
 throws(() => stringToString('1+1'));
 throws(() => stringToString('1.2.3'));
+throws(() => stringToString('NaN'));
+throws(() => stringToString('Infinity'));
+throws(() => stringToString('-Infinity'));
