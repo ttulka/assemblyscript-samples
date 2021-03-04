@@ -2,8 +2,13 @@
     'toString',
     'toNumber',
     'cmp',
-    'plus'
-
+    'plus',
+    'minus',
+    'times',
+    'div',
+    'abs',
+    'round'
+    
 ].forEach(method => require('./' + method));
 
 console.log('tests ok');

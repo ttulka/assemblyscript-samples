@@ -16,8 +16,16 @@ export function floatToNumber(n: f64): f64 {
   return Big.of(n).toNumber();
 }
 
+export function abs(n: string): string {
+  return Big.of(n).abs().toString();
+}
+
 export function cmp(a: string, b: string): i32 {
-  return Big.of(a).cmp(Big.of(b));
+  return Big.of(a).cmp(b);
+}
+
+export function round(n: string, dp: i32, rm: u8): string {
+  return Big.of(n).round(dp, rm).toString();
 }
 
 export function plus(a: string, b: string): string {
@@ -26,4 +34,12 @@ export function plus(a: string, b: string): string {
 
 export function minus(a: string, b: string): string {
   return (Big.of(a) - Big.of(b)).toString();
+}
+
+export function times(a: string, b: string): string {
+  return (Big.of(a) * Big.of(b)).toString();
+}
+
+export function div(a: string, b: string): string {
+  return (Big.of(a) / Big.of(b)).toString();
 }
