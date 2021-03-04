@@ -508,9 +508,10 @@ export default class Big {
     }
 
     /**
-     * Return a new {Big} whose value is the value of this {Big} divided by the value of {Big} {y}, rounded,
+     * Returns a new {Big} whose value is the value of this {Big} divided by the value of {Big} {y}, rounded,
      * if necessary, to a maximum of {Big.DP} decimal places using rounding mode {Big.RM}.
      */
+    //@operator('/')
     div<T>(y: T): Big {
         let by = Big.of(y);
         var x = this,
@@ -630,13 +631,51 @@ export default class Big {
     }
 
     /**
-     * Return a new {Big} whose value is the value of this {Big} rounded to a maximum of {dp} decimal places
+     * Returns a new {Big} whose value is the value of this {Big} modulo the value of {Big} {y}.
+     */
+    //@operator('%')
+    mod<T>(y: T): Big {
+        // TODO
+        return Big.of(this);
+    }
+
+    @operator('%')
+    __mod(y: Big): Big {
+        return this.mod(y);
+    }
+
+    /**
+     * Returns a {Big} whose value is the value of this {Big} raised to the power {n}.
+     * If {n} is negative, round to a maximum of {Big.DP} decimal places using rounding mode {Big.RM}.
+     *
+     * @param n {i32}, {-MAX_POWER} to {MAX_POWER} inclusive.
+     */
+    @operator('^')
+    pow(n: i32): Big {
+        // TODO
+        return Big.of(this);
+    }
+
+    /**
+     * Returns a new {Big} whose value is the value of this {Big} rounded to a maximum precision of {sd}
+     * significant digits using rounding mode {rm}, or {Big.RM} if {rm} is not specified.
+     *
+     * @param sd {i32} Significant digits: {1} to {MAX_DP} inclusive.
+     * @param rm? {u8} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
+     */
+    prec(sd: i32, rm: u8 = Big.RM): Big {
+        // TODO
+        return Big.of(this);
+    }
+
+    /**
+     * Returns a new {Big} whose value is the value of this {Big} rounded to a maximum of {dp} decimal places
      * using rounding mode {rm}, or {Big.RM} if rm is not specified.
      * If {dp} is negative, round to an integer which is a multiple of {10**-dp}.
      * If {dp} is not specified, round to {0} decimal places.
      *
-     * dp? {number} Integer, {-MAX_DP} to {MAX_DP} inclusive
-     * rm? {number} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up)
+     * @param dp? {i32}, {-MAX_DP} to {MAX_DP} inclusive
+     * @param rm? {u8} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up)
      */
     round(dp: i32 = 0, rm: u8 = Big.RM): Big {
         if (dp !== ~~dp || dp < -Big.MAX_DP || dp > Big.MAX_DP) {
