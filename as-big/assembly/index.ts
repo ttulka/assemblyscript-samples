@@ -55,3 +55,7 @@ export function divDP(a: string, b: string, dp: i32 = Big.DP): string {
 export function mod(a: string, b: string): string {
   return (Big.of(a) % Big.of(b)).toString();
 }
+
+export function pow(n: string, x: i32): string {
+  return (Big.of(n) ^ x).toString();
+}

@@ -78,11 +78,20 @@ export default class Big {
     }
 
     /**
-     * Returns zero {Big}.
+     * Returns a {Big} with the value {0} (zero).
      */
     static zero(): Big {
         const arr = new Array<u8>(1);
         arr[0] = 0;
+        return new Big(1, 0, arr);
+    }
+
+    /**
+     * Returns a {Big} with the value {1} (one).
+     */
+    static one(): Big {
+        const arr = new Array<u8>(1);
+        arr[0] = 1;
         return new Big(1, 0, arr);
     }
 
@@ -559,7 +568,7 @@ export default class Big {
                 // compare divisor and remainder
                 if (bl != (rl = r.length)) {
                     cmp = bl > rl ? 1 : -1;
-                    
+
                 } else {
                     for (ri = -1, cmp = 0; ++ri < bl;) {
                         if (b[ri] != r[ri]) {
@@ -636,7 +645,7 @@ export default class Big {
         }
 
         const xs = x.s,
-              ys = by.s;
+            ys = by.s;
         x.s = by.s = 1;
         const ygtx = by.cmp(x) == 1;
         x.s = xs;
@@ -645,7 +654,7 @@ export default class Big {
         if (ygtx) return x;
 
         const a = Big.DP,
-              b = Big.RM;
+            b = Big.RM;
         Big.DP = Big.RM = 0;
         x = x.div(by);
         Big.DP = a;
@@ -667,8 +676,25 @@ export default class Big {
      */
     @operator('^')
     pow(n: i32): Big {
-        // TODO
-        return Big.of(this);
+        let x = this,
+            one = Big.one(),
+            y = one,
+            isneg = n < 0;
+
+        if (n !== ~~n || n < -Big.MAX_POWER || n > Big.MAX_POWER) {
+            throw new Error('Invalid exponent ' + n.toString());
+        }
+
+        if (isneg) n = -n;
+
+        for (; ;) {
+            if (n & 1) y = y.times(x);
+            n >>= 1;
+            if (!n) break;
+            x = x.times(x);
+        }
+
+        return isneg ? one.div(y) : y;
     }
 
     /**

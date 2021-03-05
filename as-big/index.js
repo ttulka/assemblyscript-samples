@@ -20,6 +20,7 @@ const times = (a, b) => wasm.exports.__getString(wasm.exports.times(wasm.exports
 const div = (a, b) => wasm.exports.__getString(wasm.exports.div(wasm.exports.__newString(a), wasm.exports.__newString(b)));
 const divDP = (a, b, dp) => wasm.exports.__getString(wasm.exports.divDP(wasm.exports.__newString(a), wasm.exports.__newString(b), dp));
 const mod = (a, b) => wasm.exports.__getString(wasm.exports.mod(wasm.exports.__newString(a), wasm.exports.__newString(b)));
+const pow = (n, x) => wasm.exports.__getString(wasm.exports.pow(wasm.exports.__newString(n), x));
 
 module.exports = {
     stringToString,
@@ -34,5 +35,6 @@ module.exports = {
     times,
     div,
     divDP,
-    mod
+    mod,
+    pow
 };

@@ -7,6 +7,7 @@
     'times',
     'div',
     'mod',
+    'pow',
     'abs',
     'round'
     
