@@ -705,8 +705,10 @@ export default class Big {
      * @param rm? {u8} Rounding mode: 0 (down), 1 (half-up), 2 (half-even) or 3 (up).
      */
     prec(sd: i32, rm: u8 = Big.RM): Big {
-        // TODO
-        return Big.of(this);
+        if (sd !== ~~sd || sd < 1 || sd > Big.MAX_DP) {
+            throw new Error('Invalid precision ' + sd.toString());
+        }
+        return this.__round(Big.of(this), sd, rm);
     }
 
     /**

@@ -9,7 +9,8 @@
     'mod',
     'pow',
     'abs',
-    'round'
+    'round',
+    'prec'
     
 ].forEach(method => require('./' + method));
 

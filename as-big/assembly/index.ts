@@ -28,6 +28,10 @@ export function round(n: string, dp: i32, rm: u8): string {
   return Big.of(n).round(dp, rm).toString();
 }
 
+export function prec(n: string, sd: i32, rm: u8): string {
+  return Big.of(n).prec(sd, rm).toString();
+}
+
 export function plus(a: string, b: string): string {
   return (Big.of(a) + Big.of(b)).toString();
 }

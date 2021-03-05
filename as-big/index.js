@@ -14,6 +14,7 @@ const floatToNumber = n => wasm.exports.floatToNumber(n);
 const abs = n => wasm.exports.__getString(wasm.exports.abs(wasm.exports.__newString(n)));
 const cmp = (a, b) => wasm.exports.cmp(wasm.exports.__newString(a), wasm.exports.__newString(b));
 const round = (n, dp = 0, rm = 1) => wasm.exports.__getString(wasm.exports.round(wasm.exports.__newString(n), dp, rm));
+const prec = (n, sd, rm = 1) => wasm.exports.__getString(wasm.exports.prec(wasm.exports.__newString(n), sd, rm));
 const plus = (a, b) => wasm.exports.__getString(wasm.exports.plus(wasm.exports.__newString(a), wasm.exports.__newString(b)));
 const minus = (a, b) => wasm.exports.__getString(wasm.exports.minus(wasm.exports.__newString(a), wasm.exports.__newString(b)));
 const times = (a, b) => wasm.exports.__getString(wasm.exports.times(wasm.exports.__newString(a), wasm.exports.__newString(b)));
@@ -30,6 +31,7 @@ module.exports = {
     abs,
     cmp,
     round,
+    prec,
     plus,
     minus,
     times,
