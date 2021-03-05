@@ -44,10 +44,11 @@ export function div(a: string, b: string): string {
   return (Big.of(a) / Big.of(b)).toString();
 }
 
-export function divRM(a: string, b: string, rm: i32 = Big.RM): string {
-  const rm_ = Big.RM;
+export function divDP(a: string, b: string, dp: i32 = Big.DP): string {
+  const dp_ = Big.DP;
+  Big.DP = dp;
   const res = (Big.of(a) / Big.of(b)).toString();
-  Big.RM = rm_;
+  Big.DP = dp_;
   return res;
 }
 

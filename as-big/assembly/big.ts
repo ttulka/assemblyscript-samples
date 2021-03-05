@@ -559,6 +559,7 @@ export default class Big {
                 // compare divisor and remainder
                 if (bl != (rl = r.length)) {
                     cmp = bl > rl ? 1 : -1;
+                    
                 } else {
                     for (ri = -1, cmp = 0; ++ri < bl;) {
                         if (b[ri] != r[ri]) {
@@ -583,6 +584,7 @@ export default class Big {
                     }
 
                     for (; !r[0];) r.shift();
+
                 } else {
                     break;
                 }
