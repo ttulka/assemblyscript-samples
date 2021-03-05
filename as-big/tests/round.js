@@ -1,4 +1,4 @@
-const { round } = require('..');
+const { round } = require('.');
 const { strictEqual } = require('assert');
 
 strictEqual(round('0'), '0');

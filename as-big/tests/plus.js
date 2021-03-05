@@ -1,4 +1,4 @@
-const { plus } = require('..');
+const { plus } = require('.');
 const { strictEqual } = require('assert');
 
 strictEqual(plus('0', '0'), '0');

@@ -1,4 +1,4 @@
-const { pow } = require('..');
+const { pow } = require('.');
 const { strictEqual } = require('assert');
 
 strictEqual(pow('0', 0), '1');

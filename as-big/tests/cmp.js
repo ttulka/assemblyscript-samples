@@ -1,4 +1,4 @@
-const { cmp } = require('..');
+const { cmp } = require('.');
 const { strictEqual } = require('assert');
 
 strictEqual(cmp('0', '0'), 0);

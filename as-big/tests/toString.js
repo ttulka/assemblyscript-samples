@@ -1,4 +1,4 @@
-const { stringToString, floatToString } = require('..');
+const { stringToString, floatToString } = require('.');
 const { strictEqual, throws } = require('assert');
 
 strictEqual(stringToString('0'), '0');

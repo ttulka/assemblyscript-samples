@@ -1,4 +1,4 @@
-const { times } = require('..');
+const { times } = require('.');
 const { strictEqual } = require('assert');
 
 strictEqual(times('0', '0'), '0');

@@ -1,4 +1,4 @@
-const { div, divDP } = require('..');
+const { div, divDP } = require('.');
 const { strictEqual } = require('assert');
 
 strictEqual(div('2', '2'), '1');

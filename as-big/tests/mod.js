@@ -1,4 +1,4 @@
-const { mod } = require('..');
+const { mod } = require('.');
 const { strictEqual } = require('assert');
 
 strictEqual(mod('1', '2'), '1');

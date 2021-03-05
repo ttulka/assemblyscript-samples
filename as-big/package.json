@@ -23,7 +23,6 @@
     "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized"
   },
   "devDependencies": {
-    "@as-pect/cli": "^6.0.0",
     "@assemblyscript/loader": "^0.18.12",
     "assemblyscript": "^0.18.12"
   }
