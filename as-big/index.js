@@ -18,6 +18,8 @@ const plus = (a, b) => wasm.exports.__getString(wasm.exports.plus(wasm.exports._
 const minus = (a, b) => wasm.exports.__getString(wasm.exports.minus(wasm.exports.__newString(a), wasm.exports.__newString(b)));
 const times = (a, b) => wasm.exports.__getString(wasm.exports.times(wasm.exports.__newString(a), wasm.exports.__newString(b)));
 const div = (a, b) => wasm.exports.__getString(wasm.exports.div(wasm.exports.__newString(a), wasm.exports.__newString(b)));
+const divRM = (a, b, rm) => wasm.exports.__getString(wasm.exports.divRM(wasm.exports.__newString(a), wasm.exports.__newString(b), rm));
+const mod = (a, b) => wasm.exports.__getString(wasm.exports.mod(wasm.exports.__newString(a), wasm.exports.__newString(b)));
 
 module.exports = {
     stringToString,
@@ -30,5 +32,7 @@ module.exports = {
     plus,
     minus,
     times,
-    div
+    div,
+    divRM,
+    mod
 };

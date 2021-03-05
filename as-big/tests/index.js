@@ -6,6 +6,7 @@
     'minus',
     'times',
     'div',
+    'mod',
     'abs',
     'round'
     

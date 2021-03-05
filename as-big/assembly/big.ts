@@ -626,8 +626,30 @@ export default class Big {
      */
     //@operator('%')
     mod<T>(y: T): Big {
-        // TODO
-        return Big.of(this);
+        let x = Big.of(this),
+            by = Big.of(y);
+
+        if (!by.c[0]) {
+            throw new Error('Division by zero');
+        }
+
+        const xs = x.s,
+              ys = by.s;
+        x.s = by.s = 1;
+        const ygtx = by.cmp(x) == 1;
+        x.s = xs;
+        by.s = ys;
+
+        if (ygtx) return x;
+
+        const a = Big.DP,
+              b = Big.RM;
+        Big.DP = Big.RM = 0;
+        x = x.div(by);
+        Big.DP = a;
+        Big.RM = b;
+
+        return this.minus(x.times(by));
     }
 
     @operator('%')
@@ -682,7 +704,7 @@ export default class Big {
         if (rm !== 0 && rm !== 1 && rm !== 2 && rm !== 3) {
             throw new Error('Invalid rounding mode ' + rm.toString());
         }
-        
+
         if (sd < 1) {
             more =
                 rm === 3 && (more || !!xc[0]) || sd === 0 && (

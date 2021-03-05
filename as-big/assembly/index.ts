@@ -43,3 +43,14 @@ export function times(a: string, b: string): string {
 export function div(a: string, b: string): string {
   return (Big.of(a) / Big.of(b)).toString();
 }
+
+export function divRM(a: string, b: string, rm: i32 = Big.RM): string {
+  const rm_ = Big.RM;
+  const res = (Big.of(a) / Big.of(b)).toString();
+  Big.RM = rm_;
+  return res;
+}
+
+export function mod(a: string, b: string): string {
+  return (Big.of(a) % Big.of(b)).toString();
+}
