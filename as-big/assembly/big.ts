@@ -11,29 +11,24 @@ export default class Big {
      * The positive exponent (PE) at and above which toString returns exponential notation.
      * 1000000 is the maximum recommended exponent value of a Big, but this limit is not enforced.
      */
-    @lazy
     static PE: i32 = 21;// 0 to 1000000
 
     /**
      * The negative exponent (NE) at and beneath which toString returns exponential notation.
      * -1000000 is the minimum recommended exponent value of a Big.
      */
-    @lazy
     static NE: i32 = -7;    // 0 to -1000000
 
     /*
      * The maximum number of decimal places (DP) of the results of operations involving division:
      * div and sqrt, and pow with negative exponents.
      */
-    @lazy
     static DP: i32 = 20;    // 0 to MAX_DP
 
     // The maximum value of DP and Big.DP.
-    @lazy
     static MAX_DP: i32 = 1000000;   // 0 to 1000000
 
     // The maximum magnitude of the exponent argument to the pow method.
-    @lazy
     static MAX_POWER: i32 = 1000000;    // 1 to 1000000
 
     /**
@@ -44,7 +39,6 @@ export default class Big {
      *  2  To nearest neighbour. If equidistant, to even.   (ROUND_HALF_EVEN)
      *  3  Away from zero.                                  (ROUND_UP)
      */
-    @lazy
     static RM: u8 = 1;  // 0, 1, 2 or 3
 
     s: i8;          // sign
@@ -614,9 +608,6 @@ export default class Big {
             p--;
         }
 
-        // remove trailing zeros
-        for (; q.c.length > q.e && !q.c[q.c.length - 1];) q.c.pop();
-
         // round?
         if (qi > p) {
             return this.__round(q, p, Big.RM, r.length >= 0);
@@ -681,11 +672,11 @@ export default class Big {
         if (dp !== ~~dp || dp < -Big.MAX_DP || dp > Big.MAX_DP) {
             throw new Error('Invalid decimal places ' + dp.toString());
         }
-        return this.__round(this, dp + this.e + 1, rm);
+        return this.__round(Big.of(this), dp + this.e + 1, rm);
     }
 
+    // Mutates the instance {x}.
     __round(x: Big, sd: i32 = 0, rm: u8 = Big.RM, more: boolean = false): Big {
-        x = Big.of(x);
         let xc = x.c;
 
         if (rm !== 0 && rm !== 1 && rm !== 2 && rm !== 3) {
