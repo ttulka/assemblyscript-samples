@@ -2,7 +2,7 @@
 
 AssemblyScript library for arbitrary-precision decimal arithmetic.
 
-Highly inspired by https://github.com/MikeMcl/big.js
+Highly inspired by https://github.com/MikeMcl/big.js[big.js]
 
 == Build
 
@@ -10,7 +10,7 @@ The `assembly` directory contains AS source code.
 
 [source,sh]
 ----
-npm run asbuild:optimized -- --exportRuntime
+npm run asbuild
 ----
 
 == Test

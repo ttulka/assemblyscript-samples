@@ -12,9 +12,14 @@
       "sourceMap": true,
       "optimizeLevel": 3,
       "shrinkLevel": 1,
-      "converge": false,
-      "noAssert": false
+      "converge": true,
+      "noAssert": true
+    },
+    "test": {
+      "debug": true
     }
   },
-  "options": {}
+  "options": {
+    "exportRuntime": true
+  }
 }

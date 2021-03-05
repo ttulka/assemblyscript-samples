@@ -7,6 +7,9 @@ const imports = {
 };
 const wasm = loader.instantiateSync(fs.readFileSync(__dirname + '/build/optimized.wasm'), imports);
 
+// TODO remove convinience functions:
+//module.exports = wasm.exports;
+
 const stringToString = n => wasm.exports.__getString(wasm.exports.stringToString(wasm.exports.__newString(n)));
 const floatToString = n => wasm.exports.__getString(wasm.exports.floatToString(n));
 const stringToNumber = n => wasm.exports.stringToNumber(wasm.exports.__newString(n));

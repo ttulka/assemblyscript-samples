@@ -1,4 +1,7 @@
 import Big from './big';
+export { Big };
+
+// TODO remove convinience functions:
 
 export function stringToString(n: string): string {
   return Big.of(n).toString();

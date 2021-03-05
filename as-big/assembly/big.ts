@@ -1,7 +1,9 @@
 export declare function logme(expected: i32, actual: i32): void
 
 /**
- * Immutable representation of big decimals.
+ * Representation of big decimals.
+ * 
+ * All operations are immutable.
  * 
  * TODO
  */
