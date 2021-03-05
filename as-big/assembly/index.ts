@@ -1,4 +1,4 @@
-import Big from './big';
+import Big from './Big';
 export { Big };
 
 // TODO remove convinience functions:

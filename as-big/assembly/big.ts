@@ -43,18 +43,15 @@ export default class Big {
      */
     static RM: u8 = 1;  // 0, 1, 2 or 3
 
-    s: i8;          // sign
-    e: i32;         // decimal point
-    c: Array<u8>;   // array of digits
-
     /**
      * Default contructor. 
      * See {of} for other options.
+     *
+     * @param s     // sign
+     * @param e     // decimal point
+     * @param c     // array of digits
      */
-    constructor(s: i8, e: i32, c: Array<u8>) {
-        this.s = s;
-        this.e = e;
-        this.c = c;
+    constructor(private s: i8, private e: i32, private c: Array<u8>) {
     }
 
     /**
@@ -115,6 +112,7 @@ export default class Big {
 
     /**
      * Return true if the value of this {Big} is equal to the value of {Big} {y}, otherwise return false.
+     * @param y the {y}
      */
     //@operator('==')
     eq<T>(y: T): boolean {
@@ -128,6 +126,7 @@ export default class Big {
 
     /**
      * Return true if the value of this {Big} is not equal to the value of {Big} {y}, otherwise return false.
+     * @param y the {y}
      */
     //@operator('!=')
     neq<T>(y: T): boolean {
@@ -141,6 +140,7 @@ export default class Big {
 
     /**
      * Returns true if the value of this {Big} is greater than the value of {Big} {y}, otherwise false.
+     * @param y the {y}
      */
     //@operator('>')
     gt<T>(y: T): boolean {
@@ -154,6 +154,7 @@ export default class Big {
 
     /**
      * Returns true if the value of this {Big} is greater than or equal to the value of {Big} {y}, otherwise false.
+     * @param y the {y}
      */
     //@operator('>=')
     gte<T>(y: T): boolean {
@@ -167,6 +168,7 @@ export default class Big {
 
     /**
      * Returns true if the value of this {Big} is less than the value of {Big} {y}, otherwise false.
+     * @param y the {y}
      */
     //@operator('<')
     lt<T>(y: T): boolean {
@@ -180,6 +182,7 @@ export default class Big {
 
     /**
      * Returns true if the value of this {Big} is less than or equal to the value of {Big} {y}, otherwise false.
+     * @param y the {y}
      */
     //@operator('<=')
     lte<T>(y: T): boolean {
@@ -195,8 +198,9 @@ export default class Big {
      * Returns 1 if the value of this {Big} is greater than the value of {Big} {y},
      *        -1 if the value of this {Big} is less than the value of {Big} {y}, or
      *         0 if they have the same value.
+     * @param y the {y}
      */
-    cmp<T>(y: T): i32 {
+    cmp<T>(y: T): i8 {
         const by = y instanceof Big ? y : Big.of(y);
         let xc = this.c,
             yc = by.c,
@@ -236,6 +240,7 @@ export default class Big {
 
     /**
      * Returns a new {Big} whose value is the value of this {Big} plus the value of {Big} {y}.
+     * @param y the {y}
      */
     //@operator('+')
     plus<T>(y: T): Big {
@@ -320,6 +325,7 @@ export default class Big {
 
     /**
      * Returns a new {Big} whose value is the value of this {Big} minus the value of {Big} {y}.
+     * @param y the {y}
      */
     //@operator('-')
     minus<T>(y: T): Big {
@@ -436,6 +442,7 @@ export default class Big {
 
     /**
      * Returns a new {Big} whose value is the value of this {Big} times the value of {Big} {y}.
+     * @param y the {y}
      */
     //@operator('*')
     times<T>(y: T): Big {
@@ -515,6 +522,7 @@ export default class Big {
     /**
      * Returns a new {Big} whose value is the value of this {Big} divided by the value of {Big} {y}, rounded,
      * if necessary, to a maximum of {Big.DP} decimal places using rounding mode {Big.RM}.
+     * @param y the {y}
      */
     //@operator('/')
     div<T>(y: T): Big {
@@ -636,6 +644,7 @@ export default class Big {
 
     /**
      * Returns a new {Big} whose value is the value of this {Big} modulo the value of {Big} {y}.
+     * @param y the {y}
      */
     //@operator('%')
     mod<T>(y: T): Big {
@@ -809,6 +818,7 @@ export default class Big {
 
     /**
      * Converts this {Big} instance to {string}.
+     * 
      * @param radix currently ignored here
      */
     toString(radix: number = 10): string {
@@ -850,6 +860,10 @@ export default class Big {
 @final
 class BigOfString extends Big {
 
+    /**
+     * Constructs from a {string}.
+     * @param n the value as {string}
+     */
     constructor(n: string) {
         let xs: i8;
         let xe: i32;
@@ -905,13 +919,18 @@ class BigOfString extends Big {
         super(xs, xe, xc);
     }
 
+    /**
+     * Validates the {string} to be a valid number format.
+     * 
+     * @param n the number candidate as {string}
+     * @throws {TypeError} when not valid
+     */
     static validate(n: string): void {
-        let sign = false, e = false, enow = false, nums = false, point = false;
+        let e = false, enow = false, nums = false, point = false;
         for (let i = 0; i < n.length; i++) {
             const c = n.charAt(i);
 
             if ((c == '-' || c == '+') && (i == 0 || enow)) {
-                sign = true;
                 continue;
             }
             if (c == '.' && !point && !e) {
@@ -931,7 +950,6 @@ class BigOfString extends Big {
 
             enow = false;
             nums = true;
-            sign = false;
         }
     }
 }
