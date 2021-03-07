@@ -3,6 +3,10 @@ export { Big };
 
 // TODO remove convinience functions:
 
+export function newBig(n: string): Big {
+  return Big.of(n);
+}
+
 export function stringToString(n: string): string {
   return Big.of(n).toString();
 }

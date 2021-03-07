@@ -14,6 +14,7 @@ const {
     pow,
     round,
     prec,
+    Big,
     __getString, __newString } = require('..');
 
 // convenient functions for tests
