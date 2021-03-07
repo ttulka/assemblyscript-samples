@@ -120,7 +120,7 @@ export default class Big {
     }
 
     @operator('==')
-    __eq(y: Big): boolean {
+    eqBig(y: Big): boolean {
         return this.eq(y);
     }
 
@@ -134,7 +134,7 @@ export default class Big {
     }
 
     @operator('!=')
-    __neq(y: Big): boolean {
+    neqBig(y: Big): boolean {
         return this.neq(y);
     }
 
@@ -148,7 +148,7 @@ export default class Big {
     }
 
     @operator('>')
-    __gt(y: Big): boolean {
+    gtBig(y: Big): boolean {
         return this.gt(y);
     }
 
@@ -162,7 +162,7 @@ export default class Big {
     }
 
     @operator('>=')
-    __gte(y: Big): boolean {
+    gteBig(y: Big): boolean {
         return this.gte(y);
     }
 
@@ -176,7 +176,7 @@ export default class Big {
     }
 
     @operator('<')
-    __lt(y: Big): boolean {
+    ltBig(y: Big): boolean {
         return this.lt(y);
     }
 
@@ -190,7 +190,7 @@ export default class Big {
     }
 
     @operator('<=')
-    __lte(y: Big): boolean {
+    lteBig(y: Big): boolean {
         return this.lte(y);
     }
 
@@ -230,6 +230,10 @@ export default class Big {
         // compare lengths
         return xe == ye ? 0 : xe > ye ^ isneg ? 1 : -1;
     };
+
+    cmpBig(y: Big): i8 {
+        return this.cmp(y);
+    }
 
     /**
      * Returns a new {Big} whose value is the absolute value of this {Big}.
@@ -319,7 +323,7 @@ export default class Big {
     }
 
     @operator('+')
-    __plus(y: Big): Big {
+    plusBig(y: Big): Big {
         return this.plus(y);
     }
 
@@ -436,7 +440,7 @@ export default class Big {
     }
 
     @operator('-')
-    __minus(y: Big): Big {
+    minusBig(y: Big): Big {
         return this.minus(y);
     }
 
@@ -515,7 +519,7 @@ export default class Big {
     }
 
     @operator('*')
-    __times(y: Big): Big {
+    timesBig(y: Big): Big {
         return this.times(y);
     }
 
@@ -638,7 +642,7 @@ export default class Big {
     }
 
     @operator('/')
-    __div(y: Big): Big {
+    divBig(y: Big): Big {
         return this.div(y);
     }
 
@@ -675,7 +679,7 @@ export default class Big {
     }
 
     @operator('%')
-    __mod(y: Big): Big {
+    modBig(y: Big): Big {
         return this.mod(y);
     }
 

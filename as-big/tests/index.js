@@ -1,39 +1,29 @@
 const { 
-    stringToString,
-    floatToString,
-    stringToNumber,
-    floatToNumber,
-    abs,
-    cmp,
-    plus,
-    minus,
-    times,
-    div,
-    divDP,
-    mod,
-    pow,
-    round,
-    prec,
-    Big,
-    __getString, __newString } = require('..');
+    Big, ofString, ofNumber, getDP, setDP,
+    __getString, __newString, __pin, __unpin } = require('..');
 
-// convenient functions for tests
+// convenient functions for tests:
 module.exports = {
-  stringToString: n => __getString(stringToString(__newString(n))),
-  floatToString: n => __getString(floatToString(n)),
-  stringToNumber: n => stringToNumber(__newString(n)),
-  floatToNumber: n => floatToNumber(n),
-  abs: n => __getString(abs(__newString(n))),
-  cmp: (a, b) => cmp(__newString(a), __newString(b)),
-  round: (n, dp = 0, rm = 1) => __getString(round(__newString(n), dp, rm)),
-  prec: (n, sd, rm = 1) => __getString(prec(__newString(n), sd, rm)),
-  plus: (a, b) => __getString(plus(__newString(a), __newString(b))),
-  minus: (a, b) => __getString(minus(__newString(a), __newString(b))),
-  times: (a, b) => __getString(times(__newString(a), __newString(b))),
-  div: (a, b) => __getString(div(__newString(a), __newString(b))),
-  divDP: (a, b, dp) => __getString(divDP(__newString(a), __newString(b), dp)),
-  mod: (a, b) => __getString(mod(__newString(a), __newString(b))),
-  pow: (n, x) => __getString(pow(__newString(n), x))
+  bigToString: x => bigToString(x),
+  stringToNumber: x => bigToNumber(x),
+  floatToNumber: x => bigToNumber(x),
+  abs: x => unOp('abs', x),
+  cmp: (x, y) => numBiOp('cmpBig', x, y),
+  round: (x, dp = 0, rm = 1) => unOp('round', x, dp, rm),
+  prec: (x, sd, rm = 1) => unOp('prec', x, sd, rm),
+  plus: (x, y) => biOp('plusBig', x, y),
+  minus: (x, y) => biOp('minusBig', x, y),
+  times: (x, y) => biOp('timesBig', x, y),
+  mod: (x, y) => biOp('modBig', x, y),
+  pow: (x, n) => opNum('pow', x, n),
+  div: (x, y) => biOp('divBig', x, y),
+  divDP: (x, y, dp) => {
+    const dpOrigin = getDP();
+    setDP(dp);
+    const res = biOp('divBig', x, y);
+    setDP(dpOrigin);
+    return res;
+  },
 };
 
 [
@@ -53,3 +43,86 @@ module.exports = {
 ].forEach(method => require('./' + method));
 
 console.log('tests ok');
+
+// glue functions:
+
+function unOp(op, x, ...params) {
+  const xPtr = __pin(ofString(__newString(x)));
+  const xb = Big.wrap(xPtr);
+
+  const resPtr = __pin(xb[op](...params));
+  const resb = Big.wrap(resPtr);
+  const res = __getString(resb.toString());
+
+  __unpin(xPtr);
+  __unpin(resPtr);
+  
+  return res;
+}
+
+function biOp(op, x, y) {
+  const xPtr = __pin(ofString(__newString(x)));
+  const xb = Big.wrap(xPtr);
+  const yPtr = __pin(ofString(__newString(y)));
+  const yb = Big.wrap(yPtr);
+
+  const resPtr = __pin(xb[op](yb));
+  const resb = Big.wrap(resPtr);
+  const strPtr = resb.toString();
+  res = __getString(strPtr);
+
+  __unpin(xPtr);
+  __unpin(yPtr);
+  __unpin(resPtr);
+  
+  return res;
+}
+
+function opNum(op, x, n) {
+  const xPtr = __pin(ofString(__newString(x)));
+  const xb = Big.wrap(xPtr);
+  const resPtr = __pin(xb[op](n));
+  const resb = Big.wrap(resPtr);
+  const res = __getString(resb.toString());
+  __unpin(xPtr);
+  __unpin(resPtr);
+  return res;
+}
+
+function numBiOp(op, x, y) {
+  const xPtr = __pin(ofString(__newString(x)));
+  const xb = Big.wrap(xPtr);
+  const yPtr = __pin(ofString(__newString(y)));
+  const yb = Big.wrap(yPtr);
+
+  const res = xb[op](yb);
+
+  __unpin(xPtr);
+  __unpin(yPtr);
+  
+  return res;
+}
+
+function bigToString(x) {
+  const op = 'toString';
+  const xPtr = __pin(typeof x === 'number' 
+      ? ofNumber(x)
+      : ofString(__newString(x + '')));
+  const xb = Big.wrap(xPtr);
+  const res = __getString(xb[op]());
+  __unpin(xPtr);
+  
+  return res;
+}
+
+function bigToNumber(x) {
+  const op = 'toNumber';
+  const xPtr = __pin(typeof x === 'number' 
+      ? ofNumber(x)
+      : ofString(__newString(x + '')));
+  const xb = Big.wrap(xPtr);
+  const res = xb[op]();
+  __unpin(xPtr);
+  
+  return res;
+}
