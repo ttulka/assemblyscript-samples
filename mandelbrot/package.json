@@ -16,6 +16,7 @@
     "@assemblyscript/loader": "^0.18.11"
   },
   "devDependencies": {
+    "as-big": "^0.1.2",
     "assemblyscript": "^0.18.11",
     "local-web-server": "^4.2.1"
   }

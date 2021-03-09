@@ -2,13 +2,13 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 const [width, height] = [canvas.width, canvas.height];
 
-let offsetX = new Big(0.0), 
-    offsetY = new Big(0.0), 
-    zoom = new Big(1.0);
+let offsetX = 0, 
+    offsetY = 0, 
+    zoom = 1;
 
 // initial plotting
 
-plotMandelbrot();
+drawCanvas();
 
 // control elements
 
@@ -17,17 +17,18 @@ document.querySelectorAll('.control')
 
 // zoom view
 
-const zoomView = { width: 195, height: 138 };
+const zoomView = { width: Math.round(width / 5), height: Math.round(height / 5) };
 const zoomCanvas = document.createElement('CANVAS');
 zoomCanvas.width = width;
 zoomCanvas.height = height;
 zoomCanvas.style.position = 'absolute';
 zoomCanvas.style.zIndex = 1;
+zoomCanvas.style.left = canvas.offsetLeft;
 canvas.parentElement.appendChild(zoomCanvas);
 
 const zoomViewCtx = zoomCanvas.getContext('2d');
 
-const ZOOM = new Big(zoomView.width / width);
+const ZOOM = 5; // zoom multiplicator
 
 zoomViewCtx.strokeStyle = 'yellow';
 zoomCanvas.onmousemove = e => {
@@ -36,11 +37,9 @@ zoomCanvas.onmousemove = e => {
 };
 zoomCanvas.onmouseout = () => zoomViewCtx.clearRect(0, 0, width, height);
 zoomCanvas.onclick = e => {
-  const[x, y] = offsets(e);
-  offsetX = offsetX.plus(zoom.mul(x));
-  offsetY = offsetY.plus(zoom.mul(y));
-  zoom = zoom.mul(ZOOM);
-  console.log(offsetX.toNumber(), offsetY.toNumber(), zoom.toNumber());
+  [offsetX, offsetY] = offsets(e);
+  zoom = zoom * ZOOM;
+  console.log('zooming', offsetX, offsetY, zoom);
   drawCanvas();
 };
 zoomCanvas.onmousedown = e => {
@@ -61,8 +60,9 @@ async function drawCanvas() {
   const colorR = document.querySelector('#colorR').value;
   const colorG = document.querySelector('#colorG').value;
   const colorB = document.querySelector('#colorB').value;
+  const useBig = !!document.querySelector('#useBig').checked;
 
-  await plotMandelbrot(iterations, colorR, colorG, colorB, offsetX.toNumber(), offsetY.toNumber(), zoom.toNumber());
+  await plotMandelbrot(zoom, offsetX, offsetY, iterations, colorR, colorG, colorB, useBig);
 
   canvas.style.filter = 'initial';
 }
@@ -88,21 +88,25 @@ async function loadWasm(callback) {
     return wasm.instance.exports;
 }
 
-async function plotMandelbrot(iterations, colorR, colorG, colorB, offsetX, offsetY, zoom) {
+async function plotMandelbrot(zoom, offsetX, offsetY, iterations, colorR, colorG, colorB, useBig = false) {
   const imageData = ctx.getImageData(0, 0, width, height);
   const data = imageData.data;
 
-  const wasm = await loadWasm((i, r, g, b) => {
+  const wasm = await loadWasm((x, y, r, g, b) => {
+    const i = (x + y * width) * 4;
     data[i]     = r;
     data[i + 1] = g;
     data[i + 2] = b;
     data[i + 3] = 255;
   });
 
+  console.log('Plotting with', width, height, zoom, offsetX, offsetY, iterations, colorR, colorG, colorB);
+
   const timeMeasurementLabel = 'Plotting time';
   console.time(timeMeasurementLabel);
 
-  wasm.mandelbrot(width, height, iterations, colorR, colorG, colorB, offsetX, offsetY, zoom);
+  wasm[useBig ? 'mandelbrot_big' : 'mandelbrot_native'](
+    width, height, zoom, offsetX, offsetY, iterations, colorR, colorG, colorB);
 
   console.timeEnd(timeMeasurementLabel);
 

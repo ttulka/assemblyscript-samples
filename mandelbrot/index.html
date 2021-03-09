@@ -7,15 +7,22 @@
 <h1>Mandelbrot Set in WebAssembly</h1>
 
 <div style="display: flex">
-	<canvas id="canvas" width="780" height="552"></canvas>
-	
+	<div>
+		<div>
+			<!-- <canvas id="canvas" width="195" height="138"></canvas> -->
+			<canvas id="canvas" width="390" height="276"></canvas>
+		</div>
+		<div>
+			<input type="checkbox" value="1" id="useBig" class="control"><label for="useBig">Use Big decimals (resource-intensive)</label>
+		</div>
+	</div>
 	<div style="padding: 1rem">
 		<div>
 			<fieldset>
 	  			<legend>Iterations:</legend>
 				<p>
 					<label for="iterations">Max:</label>
-					<input type="range" min="10" max="10000" value="1000" id="iterations" class="control">
+					<input type="range" min="10" max="10000" value="200" id="iterations" class="control">
 				</p>
 			</fieldset>
 		</div>
@@ -39,7 +46,6 @@
 	</div>
 </div>
 
-<script src='https://cdn.jsdelivr.net/npm/big.js@6.0.0/big.min.js'></script>
 <script src="index.js"></script>
 
 </body>
