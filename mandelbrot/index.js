@@ -1,14 +1,10 @@
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
-const [width, height] = [canvas.width, canvas.height];
+let [width, height] = [canvas.width, canvas.height];
 
 let offsetX = 0, 
     offsetY = 0, 
     zoom = 1;
-
-// initial plotting
-
-drawCanvas();
 
 // control elements
 
@@ -17,7 +13,7 @@ document.querySelectorAll('.control')
 
 // zoom view
 
-const zoomView = { width: Math.round(width / 5), height: Math.round(height / 5) };
+let zoomView = calculateZoomView();
 const zoomCanvas = document.createElement('CANVAS');
 zoomCanvas.width = width;
 zoomCanvas.height = height;
@@ -30,7 +26,6 @@ const zoomViewCtx = zoomCanvas.getContext('2d');
 
 const ZOOM = 5; // zoom multiplicator
 
-zoomViewCtx.strokeStyle = 'yellow';
 zoomCanvas.onmousemove = e => {
   zoomViewCtx.clearRect(0, 0, width, height);
   zoomViewCtx.strokeRect(...offsets(e), zoomView.width, zoomView.height);
@@ -41,7 +36,9 @@ zoomCanvas.onclick = e => {
   offsetX += x / zoom;
   offsetY += y / zoom;
   zoom = zoom * ZOOM;
-  console.log('zooming', offsetX, offsetY, zoom);
+  console.log('zooming', x, y, offsetX, offsetY, zoom);
+  document.querySelector('#offsetX').value = offsetX;
+  document.querySelector('#offsetY').value = offsetY;
   drawCanvas();
 };
 zoomCanvas.onmousedown = e => {
@@ -51,6 +48,10 @@ zoomCanvas.onmousedown = e => {
 }
 canvas.onmousemove = e => {
   zoomCanvas.style.display = 'initial';
+}
+
+function calculateZoomView() {
+  return { width: Math.round(width / 5), height: Math.round(height / 5) };
 }
 
 // displaying
@@ -63,6 +64,18 @@ async function drawCanvas() {
   const colorG = document.querySelector('#colorG').value;
   const colorB = document.querySelector('#colorB').value;
   const useBig = !!document.querySelector('#useBig').checked;
+  const size = document.querySelector('#size').value;
+  offsetX = +document.querySelector('#offsetX').value;
+  offsetY = +document.querySelector('#offsetY').value;
+
+  width = 195 * size;
+  height = 138 * size;
+  canvas.width = width;
+  canvas.height = height;
+  zoomView = calculateZoomView();
+  zoomCanvas.width = width;
+  zoomCanvas.height = height;
+  zoomViewCtx.strokeStyle = 'yellow';
 
   await plotMandelbrot(zoom, offsetX, offsetY, iterations, colorR, colorG, colorB, useBig);
 
@@ -75,6 +88,10 @@ function offsets(e) {
     Math.min(Math.max(Math.floor(e.offsetY - zoomView.height / 2), 0), height - zoomView.height)
   ];
 }
+
+// initial plotting
+
+drawCanvas();
 
 // /////////////////////////////////////////////////////////////////////////////////////////////////
 // Wasm glue functions

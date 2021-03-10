@@ -9,8 +9,7 @@
 <div style="display: flex">
 	<div>
 		<div>
-			<!-- <canvas id="canvas" width="195" height="138"></canvas> -->
-			<canvas id="canvas" width="390" height="276"></canvas>
+			<canvas id="canvas" width="195" height="138"></canvas>
 		</div>
 		<div>
 			<input type="checkbox" value="1" id="useBig" class="control"><label for="useBig">Use Big decimals (resource-intensive)</label>
@@ -19,16 +18,16 @@
 	<div style="padding: 1rem">
 		<div>
 			<fieldset>
-	  			<legend>Iterations:</legend>
+	  		<legend>Iterations:</legend>
 				<p>
 					<label for="iterations">Max:</label>
-					<input type="range" min="10" max="10000" value="200" id="iterations" class="control">
+					<input type="range" min="10" max="5000" value="200" id="iterations" class="control">
 				</p>
 			</fieldset>
 		</div>
 		<div>
 			<fieldset>
-	  			<legend>Colors:</legend>
+	  		<legend>Colors:</legend>
 				<p>
 					<label for="colorR">R:</label>
 					<input type="range" min="1" max="10" value="7" id="colorR" class="control">
@@ -40,6 +39,19 @@
 				<p>
 					<label for="colorB">B:</label>
 					<input type="range" min="1" max="10" value="4" id="colorB" class="control">
+				</p>
+			</fieldset>
+		</div>
+		<div>
+			<fieldset>
+	  		<legend>Image:</legend>
+				<p>
+					<label for="size">Size:</label>
+					<input type="range" min="1" max="10" value="1" id="size" class="control">
+				</p>
+				<p>
+					X<input id="offsetX" size="6" value="0" class="control"> 
+					Y<input id="offsetY" size="6" value="0" class="control">
 				</p>
 			</fieldset>
 		</div>
