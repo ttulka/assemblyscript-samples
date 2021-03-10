@@ -13,7 +13,7 @@ const zoom = 100;
 const x = -0.65940;    // -2.15 to 1.15
 const y = -0.45043;    // -1.25 to 1.25
 
-const interations = 100000;    // > 10
+const interations = 1000;    // > 10
 
 const r = 7, g = 2, b = 4;  // 1 to 10
 
