@@ -37,7 +37,9 @@ zoomCanvas.onmousemove = e => {
 };
 zoomCanvas.onmouseout = () => zoomViewCtx.clearRect(0, 0, width, height);
 zoomCanvas.onclick = e => {
-  [offsetX, offsetY] = offsets(e);
+  [x, y] = offsets(e);
+  offsetX += x / zoom;
+  offsetY += y / zoom;
   zoom = zoom * ZOOM;
   console.log('zooming', offsetX, offsetY, zoom);
   drawCanvas();
