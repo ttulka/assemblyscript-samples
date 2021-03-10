@@ -1,4 +1,4 @@
-# Plain Text Mandelbrot Set in AssemblyScript
+# Plain Text Mandelbrot Set in WebAssembly
 
 Prints the Mandelbrot Set to the console.
 
