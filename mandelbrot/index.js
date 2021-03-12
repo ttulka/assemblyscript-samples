@@ -1,8 +1,10 @@
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
-let [width, height] = [canvas.width, canvas.height];
+const [widthInit, heightInit] = [canvas.width, canvas.height];
 
-let offsetX = 0, 
+let width = widthInit,
+    height = heightInit,
+    offsetX = 0, 
     offsetY = 0, 
     zoom = 1;
 
@@ -59,6 +61,8 @@ function calculateZoomView() {
 async function drawCanvas() {
   canvas.style.filter = 'blur(3px)';
 
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
   const iterations = document.querySelector('#iterations').value;
   const colorR = document.querySelector('#colorR').value;
   const colorG = document.querySelector('#colorG').value;
@@ -68,16 +72,19 @@ async function drawCanvas() {
   offsetX = +document.querySelector('#offsetX').value;
   offsetY = +document.querySelector('#offsetY').value;
 
-  width = 195 * size;
-  height = 138 * size;
-  canvas.width = width;
-  canvas.height = height;
+  width = widthInit * size;
+  height = heightInit * size;
+  if (canvas.width != width || canvas.height != height) {
+    canvas.width = width;
+    canvas.height = height;
+  }
+
+  await plotMandelbrot(zoom, offsetX, offsetY, iterations, colorR, colorG, colorB, useBig);
+  
   zoomView = calculateZoomView();
   zoomCanvas.width = width;
   zoomCanvas.height = height;
   zoomViewCtx.strokeStyle = 'yellow';
-
-  await plotMandelbrot(zoom, offsetX, offsetY, iterations, colorR, colorG, colorB, useBig);
 
   canvas.style.filter = 'initial';
 }

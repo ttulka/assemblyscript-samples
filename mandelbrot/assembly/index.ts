@@ -77,7 +77,7 @@ export function mandelbrot_big(
 }
 
 export function mandelbrot_native(
-    width: i32, height: i32, zoomTimes: i32, offsetX: i32, offsetY: i32, maxIterations: i32,
+    width: i32, height: i32, zoomTimes: i32, offsetX: f64, offsetY: f64, maxIterations: i32,
     rMagnitude: u32, gMagnitude: u32, bMagnitude: u32): void {
 
   maxIterations = max(10, maxIterations || 100);
