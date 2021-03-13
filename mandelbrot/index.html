@@ -1,21 +1,44 @@
 <html>
 <head>
-  <title>Mandelbrot Set</title>
+  <title>Mandelbrot Set in WebAssembly</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oxygen&display=swap" rel="stylesheet">
+  <style>
+	  body {
+		  background-color:#bcc7c9; 
+		  padding: 2rem; 
+		  font-family: 'Oxygen', sans-serif;
+	  }
+	  main {
+		display: flex; flex-wrap: wrap;
+	  }
+	  h1 {
+		  font-size: 1.5em;
+	  }
+	  fieldset {
+		  padding: 0.2rem 1rem;
+		  margin: 0 0 1rem 0;
+	  }
+	  canvas {
+		  margin-right: 1rem;
+	  }
+  </style>
 </head>
-<body style="background-color:gray; padding: 2rem;">
+<body>
 
 <h1>Mandelbrot Set in WebAssembly</h1>
 
-<div style="display: flex">
+<main>
 	<div>
 		<div>
 			<canvas id="canvas" width="390" height="276"></canvas>
 		</div>
-		<div>
+		<p>
 			<input type="checkbox" value="1" id="useBig" class="control"><label for="useBig">Use Big decimals (resource-intensive)</label>
-		</div>
+		</p>
 	</div>
-	<div style="padding: 1rem">
+	<div>
 		<div>
 			<fieldset>
 	  		<legend>Iterations:</legend>
@@ -50,13 +73,13 @@
 					<input type="range" min="1" max="10" value="1" id="size" class="control">
 				</p>
 				<p>
-					X<input id="offsetX" size="6" value="0" class="control"> 
-					Y<input id="offsetY" size="6" value="0" class="control">
+					X: <input id="offsetX" size="6" value="0" class="control"> 
+					Y: <input id="offsetY" size="6" value="0" class="control">
 				</p>
 			</fieldset>
 		</div>
 	</div>
-</div>
+</main>
 
 <script src="index.js"></script>
 
