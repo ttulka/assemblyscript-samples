@@ -10,8 +10,8 @@ npm run asbuild:optimized
 
 ## Run
 ```sh
-npx ws -p 1234
+npm start
 ```
 
-Open `http://127.0.0.1:1234` in a web browser.
+Open `http://127.0.0.1:3000` in a web browser.
 
