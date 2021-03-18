@@ -16,14 +16,14 @@ npm run asbuild:optimized
 ## Usage
 
 ```sh
-node index.js <image-width> <zoom> <x-offset> <y-offset> <max-iterations>
+node index.js [image-width] [zoom] [x-offset] [y-offset] [max-iterations]
 ```
 
-- `<image-width>`: with of the resulting image in pixels (default: `100`)
-- `<zoom>`: zoom value (default: `1`)
-- `<x-offset>`: offset of the X axis (default: `-2.15`)
-- `<y-offset>`: offset of the Y axis (default: `-1.25`)
-- `<max-iterations>`: Maximal iterations (default: `1000`)
+- `image-width`: with of the resulting image in pixels (default: `100`)
+- `zoom`: zoom value (default: `1`)
+- `x-offset`: offset of the X axis (default: `-2.15`)
+- `y-offset`: offset of the Y axis (default: `-1.25`)
+- `max-iterations`: Maximal iterations (default: `1000`)
 
 Example:
 
