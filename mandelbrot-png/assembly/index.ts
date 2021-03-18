@@ -8,8 +8,9 @@ const Y1 = -1.25, Y2 = 1.25;
 const FOUR = Big.of(4);
 
 export function mandelbrot(
-    width: i32, height: i32, zoomTimes: i32, offsetX: f64, offsetY: f64, maxIterations: i32,
-    rMagnitude: u32, gMagnitude: u32, bMagnitude: u32): void {
+    width: i32, height: i32, zoomTimes: string, offsetX: string, offsetY: string, maxIterations: i32,
+    rMagnitude: u32, gMagnitude: u32, bMagnitude: u32,
+    presicison: u32 = 20): void {
 
   maxIterations = max(10, maxIterations || 100);
 
@@ -19,13 +20,13 @@ export function mandelbrot(
 
   const maxMagnitude = Math.log(maxIterations) * Math.PI;
 
-  const maxPrecision = min(30, zoomTimes * 10);
+  const maxPrecision = presicison;
   const defaultPrecision = Big.DP;
   Big.DP = maxPrecision;  
 
-  const offX = Big.of(offsetX || X1);
-  const offY = Big.of(offsetY || Y1);
-  const zoom = Big.of(zoomTimes || 1);
+  const offX = Big.of(offsetX);
+  const offY = Big.of(offsetY);
+  const zoom = Big.of(zoomTimes);
 
   const w = Big.of(width);
   const h = Big.of(height);
