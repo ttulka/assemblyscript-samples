@@ -1,4 +1,4 @@
-# Plotting Mandelbrot Set into PNG in WebAssembly
+# Plotting Mandelbrot Set into PNG with WebAssembly
 
 Theoretically unlimited zooming into the Mandelbrot Set.
 
