@@ -8,14 +8,9 @@ canvas.height = HEIGHT;
 start();
 
 async function loadWasm() {
-  const arraySize = (WIDTH * HEIGHT * 4) >>> 0;
-  const nPages = ((arraySize + 0xffff) & ~0xffff) >>> 16;
-  const memory = new WebAssembly.Memory({ initial: nPages });
-
   const wasm = await WebAssembly
     .instantiateStreaming(fetch('./build/optimized.wasm'), {
       env: {
-        memory, // npm run asbuild:optimized -- --importMemory
         abort: (_msg, _file, line, column) => console.error(`Abort at ${line}:${column}`)
       }});
     return wasm.instance.exports;

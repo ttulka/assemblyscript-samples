@@ -1,6 +1,6 @@
 # Canvas Images with AssemblyScript
 
-A small pixel art game powered by WebAssembly.
+A small 2D game powered by WebAssembly.
 
 ## Build
 
@@ -19,7 +19,7 @@ node image2array.js assets/image.png > assembly/image.ts
 ### Compile to WebAssembly
 
 ```sh
-npm run asbuild:optimized -- --importMemory
+npm run asbuild:optimized
 ```
 
 ## Run
