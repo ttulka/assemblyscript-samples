@@ -1,9 +1,10 @@
-import { Canvas } from './Canvas';
 import {Game, Control} from './Game';
-import Player from './Player';
+import Canvas from './Canvas';
 import Scene from './Scene';
+import Player from './Player';
 
-const WIDTH = 100, HEIGHT = 100;
+const WIDTH = 100, 
+      HEIGHT = 100;
 
 const canvas = new Canvas(WIDTH, HEIGHT);
 const game = new Game(new Scene(canvas), new Player(canvas));

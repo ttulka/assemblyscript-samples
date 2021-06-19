@@ -1,41 +1,148 @@
 import Canvas from './Canvas';
 
-import player from './assets/player';
+import image from './assets/player';
+
+const WIDTH = 16,
+    HEIGHT: i32 = WIDTH,
+    STEP: i32 = 3,
+    JUMP_AMPLITUDE: i32 = 12;    // how high can jump
+
+enum Actions {
+    IDLE,
+    MOVING,
+    JUMPING
+}
+
+enum Directions {
+    NONE,
+    RIGHT,
+    LEFT
+}
 
 export default class Player {
-    
-    private readonly SIZE: i32 = 16;
-    
+
     private canvas: Canvas;
 
-    private playerEven: boolean;
+    private pos: i32;
+    private action: Actions;
+    private direction: Directions;
+
+    private stepOdd: boolean;
+    private actionStep: i32;
 
     constructor(canvas: Canvas) {
         this.canvas = canvas;
-        this.playerEven = true;
+        this.reset();
     }
 
-    moveRight(): void {
-        this.playerEven = !this.playerEven;                
-    }
+    reset(): void {
+        this.pos = 0;
+        this.action = Actions.IDLE;
+        this.direction = Directions.NONE;
 
-    moveLeft(): void {
-        this.playerEven = !this.playerEven;
-    }
-
-    idle(): void {
-        this.playerEven = true;
+        this.stepOdd = true;
+        this.actionStep = 0;
     }
 
     update(): void {
-        this.drawPlayer(player);
+        if (this.isMoving()) {
+            this.move();
+            this.stepOdd = !this.stepOdd;
+        }
+        if (this.isJumping()) {
+            this.move();
+            this.actionStep = this.actionStep < JUMP_AMPLITUDE * 2
+                ? this.actionStep + STEP
+                : 0;
+        }
     }
 
-    private drawPlayer(image: u8[]): void {
-        this.canvas.drawImage(image, 
-            this.canvas.width / 2 - this.SIZE, 
-            this.SIZE + 2 + (this.playerEven ? -1 : 0),
-            this.SIZE, 
-            this.SIZE);
+    draw(): void {
+        this.canvas.drawImage(image, this.x(), this.y(), WIDTH, HEIGHT);
+    }
+
+    position(): i32 {
+        return this.pos;
+    }
+
+    x(): i32 {
+        return this.canvas.width / 2 - WIDTH;    // always in the middle
+    }
+
+    y(): i32 {
+        const y = HEIGHT + 1;
+        if (this.isMoving()) {
+            return y + this.moveOffsetY();
+        }
+        if (this.isJumping()) {
+            return y + this.jumpOffsetY();
+        }
+        return y;
+    }
+
+    idle(): void {
+        this.action = this.nextAction(Actions.IDLE);
+        if (this.isIdle()) {
+            this.direction = Directions.NONE;
+            this.stepOdd = true;
+        }
+    }
+
+    headRight(): void {
+        this.action = this.nextAction(Actions.MOVING);
+        if (this.isMoving()) {
+            this.direction = Directions.RIGHT;
+        }
+    }
+
+    headLeft(): void {
+        this.action = this.nextAction(Actions.MOVING);
+        if (this.isMoving()) {
+            this.direction = Directions.LEFT;
+        }
+    }
+
+    jump(): void {
+        this.action = this.nextAction(Actions.JUMPING);
+    }
+
+    private move(): void {
+        if (Directions.RIGHT == this.direction) {
+            this.pos += STEP;
+        }
+        if (Directions.LEFT == this.direction) {
+            this.pos = max(this.pos - STEP, 0);
+        }
+    }
+
+    private isIdle(): boolean {
+        return Actions.IDLE == this.action;
+    }
+
+    private isMoving(): boolean {
+        return Actions.MOVING == this.action;
+    }
+
+    private isJumping(): boolean {
+        return Actions.JUMPING == this.action;
+    }
+
+    private nextAction(current: Actions): Actions {
+        if (this.isJumping()) {
+            return this.actionStep > 0 
+                ? Actions.JUMPING
+                : Actions.MOVING;
+        }
+        return current;
+    }
+
+    private moveOffsetY(): i32 {
+        return this.stepOdd ? 0 : 1;    // decent move steps
+    }
+
+    private jumpOffsetY(): i32 {
+        return this.actionStep > JUMP_AMPLITUDE    // it takes double amplitude to finish a jump
+            ? JUMP_AMPLITUDE * 2 - this.actionStep
+            : this.actionStep;
     }
 }

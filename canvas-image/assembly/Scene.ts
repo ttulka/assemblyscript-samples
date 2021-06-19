@@ -12,7 +12,7 @@ export default class Scene {
         this.canvas = canvas;
     }
 
-    update(position: i32): void {
+    draw(position: i32): void {
         this.drawLayer(sky, 0, 0);
         this.drawLayer(forest, position, 3);
         this.drawLayer(soil, position, 1);
