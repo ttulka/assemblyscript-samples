@@ -8,21 +8,25 @@ export default class Canvas {
         this.height = height;
     }
 
-    drawImage(image: u8[], posX: i32, posY: i32, w: i32, h: i32): void {
-        for (let y = 0; y < h; y++) {
-            for (let x = 0; x < w; x++) {
+    drawImage(image: u8[], posX: i32, posY: i32, width: i32, height: i32): void {
+        if (posX + width < 0 || posX > this.width) {
+            return; // not visible
+        }
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
 
-                const di = this.arrayIndex(x, y, w, h); // image data index
+                if (x + posX < 0 || x + posX >= this.width) continue;
+
+                const di = this.arrayIndex(x, y, width, height); // image data index
+
+                if (image[di + 3] < 100) continue;
                 
-                if (image[di + 3] >= 100) { // draw only visible
-                    
-                    const ci = this.arrayIndex(x + posX, y + posY, this.width, this.height); // canvas index
+                const ci = this.arrayIndex(x + posX, y + posY, this.width, this.height); // canvas index
 
-                    store<u8>(ci,     image[di]);
-                    store<u8>(ci + 1, image[di + 1]);
-                    store<u8>(ci + 2, image[di + 2]);
-                    store<u8>(ci + 3, 255);
-                }
+                store<u8>(ci,     image[di]);
+                store<u8>(ci + 1, image[di + 1]);
+                store<u8>(ci + 2, image[di + 2]);
+                store<u8>(ci + 3, 255);
             }
         }
     }
@@ -32,16 +36,15 @@ export default class Canvas {
             for (let x = 0; x < this.width; x++) {
 
                 const di = this.arrayIndex((x + imageOffsetX) % this.width, y, this.width, this.height); // image data index
-                
-                if (image[di + 3] >= 100) { // draw only visible
-                    
-                    const ci = this.arrayIndex(x, y, this.width, this.height); // canvas index
 
-                    store<u8>(ci,     image[di]);
-                    store<u8>(ci + 1, image[di + 1]);
-                    store<u8>(ci + 2, image[di + 2]);
-                    store<u8>(ci + 3, 255);
-                }
+                if (image[di + 3] < 100) continue;
+                
+                const ci = this.arrayIndex(x, y, this.width, this.height); // canvas index
+
+                store<u8>(ci,     image[di]);
+                store<u8>(ci + 1, image[di + 1]);
+                store<u8>(ci + 2, image[di + 2]);
+                store<u8>(ci + 3, 255);
             }
         }
     }

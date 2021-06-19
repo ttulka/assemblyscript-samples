@@ -6,8 +6,7 @@ import Player from './Player';
 const WIDTH = 100, 
       HEIGHT = 100;
 
-const canvas = new Canvas(WIDTH, HEIGHT);
-const game = new Game(new Scene(canvas), new Player(canvas));
+const game = new Game(new Canvas(WIDTH, HEIGHT));
 
 export function start(): void {
     game.start();
