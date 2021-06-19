@@ -1,10 +1,7 @@
 import Canvas from './Canvas';
 import Player from './Player';
 import Scene from './Scene';
-import Thing from './Thing';
-
-import directionImg from './assets/direction';
-import flagImg from './assets/flag';
+import { Thing, Direction, Flag } from './Thing';
 
 export enum Control {
     Up = 1,
@@ -23,8 +20,8 @@ export class Game {
         this.scene = new Scene(canvas);
         this.player = new Player(canvas);
         this.things = [
-            new Thing(canvas, directionImg, 18, 18, 2, 18),
-            new Thing(canvas, flagImg, 18, 18, 120, 18)
+            new Direction(canvas, 2, 18), 
+            new Flag(canvas, 120, 18)
         ];
     }
 
