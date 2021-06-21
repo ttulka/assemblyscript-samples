@@ -32,10 +32,10 @@ export class Game {
     update(control: Control): void {
         switch (control) {
             case Control.Right:
-                this.player.headRight();
+                this.player.moveRight();
                 break;
             case Control.Left:
-                this.player.headLeft();
+                this.player.moveLeft();
                 break;
             case Control.Up:
                 this.player.jump();
@@ -47,8 +47,8 @@ export class Game {
         
         this.player.update();
 
-        this.scene.draw(this.player.position());
-        this.drawThings(this.player.position());
+        this.scene.draw(this.player.positionRelativeX());
+        this.drawThings(this.player.positionRelativeX());
         this.player.draw();
     }
 
