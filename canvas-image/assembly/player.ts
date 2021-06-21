@@ -55,6 +55,10 @@ export default class Player {
         return this.pos.x - this.startX;
     }
 
+    width(): i32 {
+        return WIDTH;
+    }
+
     idle(): void {
         if (!this.action.isRunning()) {
             this.action = new Idle(this.pos, this.startY);

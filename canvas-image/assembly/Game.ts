@@ -17,22 +17,31 @@ export class Game {
     private scene: Scene;
     private player: Player;
     private things: Thing[];
+    private flag: Flag;
     private score: Score;
     private life: Life;
 
+    private level: i32 = 1;
+
+    private canvas: Canvas;
+
     constructor(canvas: Canvas) {
+        this.canvas = canvas;
         this.scene = new Scene(canvas);
         this.player = new Player(canvas);
-        this.things = [
-            new Direction(canvas, 2, 18), 
-            new Flag(canvas, 120, 18)
-        ];
         this.score = new Score(canvas, canvas.width - 3, canvas.height - 3);
         this.life = new Life(canvas, 3, canvas.height - 3);
+
+        this.things = [];
+        this.flag = new Flag(canvas, 120, 18);
     }
 
     start(): void {
         this.player.reset();
+        this.things = [
+            new Direction(this.canvas, 2, 18)
+        ];
+        this.flag = new Flag(this.canvas, 120 * this.level, 18);
     }
 
     update(control: Control): void {
@@ -55,9 +64,17 @@ export class Game {
 
         this.scene.draw(this.player.positionRelativeX());
         this.drawThings(this.player.positionRelativeX());
+        this.flag.draw(this.player.positionRelativeX());
         this.player.draw();
         this.score.draw();
         this.life.draw();
+
+        // next level reached
+        if (this.flag.overlapsWith(this.player.position().x, this.player.width())) {
+            this.level++;
+            this.score.increment();
+            this.start();
+        }
     }
 
     private drawThings(position: i32): void {

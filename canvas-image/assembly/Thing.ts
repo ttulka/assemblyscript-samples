@@ -5,8 +5,8 @@ import flagImg from './assets/flag';
 
 export class Thing {
 
-    canvas: Canvas;
-    image: u8[];
+    private canvas: Canvas;
+    private image: u8[];
     width: i32;
     height: i32;
     positionX: i32;
@@ -24,6 +24,11 @@ export class Thing {
     draw(position: i32): void {
         this.canvas.drawImage(this.image, this.positionX - position, this.positionY, this.width, this.height);
     }
+
+    overlapsWith(x: i32, width: i32): boolean {
+        return x + width >= this.positionX;
+    }
+
 }
 
 export class Direction extends Thing {
