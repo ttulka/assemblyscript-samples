@@ -1,6 +1,8 @@
 import Canvas from './Canvas';
+import Life from './Life';
 import Player from './Player';
 import Scene from './Scene';
+import Score from './Score';
 import { Thing, Direction, Flag } from './Thing';
 
 export enum Control {
@@ -15,6 +17,8 @@ export class Game {
     private scene: Scene;
     private player: Player;
     private things: Thing[];
+    private score: Score;
+    private life: Life;
 
     constructor(canvas: Canvas) {
         this.scene = new Scene(canvas);
@@ -23,6 +27,8 @@ export class Game {
             new Direction(canvas, 2, 18), 
             new Flag(canvas, 120, 18)
         ];
+        this.score = new Score(canvas, canvas.width - 3, canvas.height - 3);
+        this.life = new Life(canvas, 3, canvas.height - 3);
     }
 
     start(): void {
@@ -50,6 +56,8 @@ export class Game {
         this.scene.draw(this.player.positionRelativeX());
         this.drawThings(this.player.positionRelativeX());
         this.player.draw();
+        this.score.draw();
+        this.life.draw();
     }
 
     private drawThings(position: i32): void {
