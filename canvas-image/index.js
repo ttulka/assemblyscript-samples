@@ -50,7 +50,7 @@ async function start() {
   const imageData = ctx.getImageData(0, 0, WIDTH, HEIGHT);
   const bytes = new Uint8ClampedArray(wasm.memory.buffer);
 
-  const renderCall = () => writeImageData(imageData, bytes);
+  const renderCall = () => writeImageData(imageData, wasm.memory.buffer);
   const updateCall = () => update(wasm, renderCall);
   setInterval(updateCall, 150);
 }
@@ -65,8 +65,10 @@ function update(wasm, render) {
     render();
 }
 
-function writeImageData(imageData, bytes) {
-  //console.log('data', bytes[0]);
+function writeImageData(imageData, buffer) {
+  const bytes = new Uint8ClampedArray(buffer);
+  console.log('bytes length', bytes.length);
+  //console.log('data', bytes[0], bytes[1], bytes[2], bytes[3]);
   const data = imageData.data;
   for (let i = 0; i < WIDTH * HEIGHT * 4; i++) 
      data[i] = bytes[i];
