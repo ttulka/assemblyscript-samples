@@ -49,6 +49,20 @@ export default class Canvas {
         }
     }
 
+    turnToGray(): void {
+        for (let i = 0; i < this.width * this.height * 4; i += 4 /*rgba*/) {
+            const r = load<u8>(i);
+            const g = load<u8>(i + 1);
+            const b = load<u8>(i + 2);
+            
+            const gray = u8(r * 0.2126 + g * 0.7152 + b * 0.0722);
+        
+            store<u8>(i,     gray);
+            store<u8>(i + 1, gray);
+            store<u8>(i + 2, gray);
+          }
+    }
+
     private arrayIndex(x: i32, y: i32, w: i32, h: i32): i32 {
         // [0,0] is in the left bottom corner
         return (h - 1 - y) * w * 4 + x * 4;

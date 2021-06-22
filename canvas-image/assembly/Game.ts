@@ -55,6 +55,7 @@ export class Game {
 
     update(control: Control): void {
         if (!this.running) {
+            this.canvas.turnToGray();
             return;
         }        
         this.updatePlayer(control);

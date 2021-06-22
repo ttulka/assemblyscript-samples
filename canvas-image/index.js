@@ -67,7 +67,7 @@ function update(wasm, render) {
 
 function writeImageData(imageData, buffer) {
   const bytes = new Uint8ClampedArray(buffer);
-  console.log('bytes length', bytes.length);
+  //console.log('bytes length', bytes.length);
   //console.log('data', bytes[0], bytes[1], bytes[2], bytes[3]);
   const data = imageData.data;
   for (let i = 0; i < WIDTH * HEIGHT * 4; i++) 
