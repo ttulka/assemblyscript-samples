@@ -22,11 +22,17 @@ export default class Life {
         this.positionY = positionY;
     }
 
-    decrement(): void {
-        this.amount--;
+    decrement(): i32 {
+        return --this.amount;
+    }
+
+    isDead(): boolean {
+        return this.amount <= 0;
     }
 
     draw(): void {
-        this.canvas.drawImage(lifes[this.amount - 1], this.positionX, this.positionY - HEIGHT, WIDTH, HEIGHT);
+        if (this.amount > 0) {
+            this.canvas.drawImage(lifes[this.amount - 1], this.positionX, this.positionY - HEIGHT, WIDTH, HEIGHT);
+        }
     }
 }
