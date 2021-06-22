@@ -5,6 +5,8 @@ import Scene from './Scene';
 import Score from './Score';
 import { Thing, Direction, Flag, Water } from './Thing';
 
+const JOURNEY_LENGTH = 150;
+
 export enum Control {
     Up = 1,
     Down,
@@ -37,7 +39,7 @@ export class Game {
 
         this.things = [];
         this.obstacles = [];
-        this.flag = new Flag(canvas, 120, 18);
+        this.flag = new Flag(canvas, JOURNEY_LENGTH + 20, 18);
     }
 
     start(): void {
@@ -45,10 +47,8 @@ export class Game {
         this.things = [
             new Direction(this.canvas, 2, 18)
         ];
-        this.obstacles = [
-            new Water(this.canvas, 60, 2)
-        ];
-        this.flag = new Flag(this.canvas, 120 * this.level, 18);
+        this.obstacles = this.placeObstacles();
+        this.flag = new Flag(this.canvas, JOURNEY_LENGTH * this.level, 18);
 
         this.running = true;
     }
@@ -61,6 +61,22 @@ export class Game {
         this.updatePlayer(control);
         this.updateIteractions();
         this.drawGame();
+    }
+
+    private placeObstacles(): Thing[] {
+        const obstacles: Thing[] = [];
+        const occupied: i32[] = [];
+        const lengthInSteps: i32 = JOURNEY_LENGTH / 3 * this.level / this.player.width() - 2;
+        
+        const m = Math.pow(this.level, 2);
+        let i = 0;
+        while (i < m) {
+            const pos = i32(Math.random() * lengthInSteps + 2) * 3 * this.player.width();
+            if (occupied.includes(pos)) continue;
+            obstacles.push(new Water(this.canvas, pos, 2));
+            i++;
+        }
+        return obstacles;
     }
 
     private updatePlayer(control: Control): void {
