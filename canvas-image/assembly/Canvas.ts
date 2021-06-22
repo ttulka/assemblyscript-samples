@@ -8,7 +8,7 @@ export default class Canvas {
         this.height = height;
     }
 
-    drawImage(image: u8[], posX: i32, posY: i32, width: i32, height: i32): void {
+    drawImage(image: u8[], posX: i32, posY: i32, width: i32, height: i32, red: boolean = false): void {
         if (posX + width < 0 || posX > this.width) {
             return; // not visible
         }
@@ -23,10 +23,17 @@ export default class Canvas {
                 
                 const ci = this.arrayIndex(x + posX, y + posY, this.width, this.height); // canvas index
 
-                store<u8>(ci,     image[di]);
-                store<u8>(ci + 1, image[di + 1]);
-                store<u8>(ci + 2, image[di + 2]);
-                store<u8>(ci + 3, 255);
+                if (red) {
+                    store<u8>(ci,     image[di]);
+                    store<u8>(ci + 1, 0);
+                    store<u8>(ci + 2, 0);
+                    store<u8>(ci + 3, 255);
+                } else {
+                    store<u8>(ci,     image[di]);
+                    store<u8>(ci + 1, image[di + 1]);
+                    store<u8>(ci + 2, image[di + 2]);
+                    store<u8>(ci + 3, 255);
+                }
             }
         }
     }

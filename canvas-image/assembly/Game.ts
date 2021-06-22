@@ -101,6 +101,7 @@ export class Game {
     private updateIteractions(): void {
         // hit by an obstacle
         if (this.hasHitWith(this.obstacles, this.player.position().x, this.player.position().y, this.player.width())) {
+            this.player.hit();
             this.life.decrement();
             if (this.life.isDead()) {
                 this.running = false;

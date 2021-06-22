@@ -23,6 +23,8 @@ export default class Player {
     private readonly startX: i32;
     private readonly startY: i32;
 
+    private gotHit: boolean;
+
     constructor(canvas: Canvas) {
         this.canvas = canvas;
         this.startX = this.canvas.width / 2 - WIDTH;
@@ -41,10 +43,11 @@ export default class Player {
         this.action.perform();
         this.pos = this.action.position();
         this.pos.x = max(this.pos.x, this.startX);
+        this.gotHit = false;
     }
 
     draw(): void {
-        this.canvas.drawImage(image, this.startX, this.pos.y, WIDTH, HEIGHT);
+        this.canvas.drawImage(image, this.startX, this.pos.y, WIDTH, HEIGHT, this.gotHit);
     }
 
     position(): Position {
@@ -81,6 +84,10 @@ export default class Player {
         if (!this.action.isRunning()) {
             this.action = new Jumping(this.pos, this.startY, this.action.direction());
         }
+    }
+
+    hit(): void {
+        this.gotHit = true;
     }
 }
 
