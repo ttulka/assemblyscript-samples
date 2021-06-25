@@ -4,12 +4,12 @@ import Player from './Player';
 import Scene from './Scene';
 import Score from './Score';
 import { Thing, Direction, Flag, Water } from './Thing';
+import { Monster, Fly } from './Monster';
 
-const JOURNEY_LENGTH = 150;
+const JOURNEY_LENGTH = 150; // length of journey base
 
 export enum Control {
     Up = 1,
-    Down,
     Left,
     Right,
 }
@@ -20,6 +20,7 @@ export class Game {
     private player: Player;
     private things: Thing[];
     private obstacles: Thing[];
+    private monsters: Monster[];
     private flag: Flag;
     private score: Score;
     private life: Life;
@@ -39,6 +40,7 @@ export class Game {
 
         this.things = [];
         this.obstacles = [];
+        this.monsters = [];
         this.flag = new Flag(canvas, JOURNEY_LENGTH + 20, 18);
     }
 
@@ -46,6 +48,9 @@ export class Game {
         this.player.reset();
         this.things = [
             new Direction(this.canvas, 2, 18)
+        ];
+        this.monsters = [
+            new Fly(this.canvas, 50, 75)
         ];
         this.obstacles = this.placeObstacles();
         this.flag = new Flag(this.canvas, JOURNEY_LENGTH * this.level, 18);
@@ -59,7 +64,8 @@ export class Game {
             return;
         }        
         this.updatePlayer(control);
-        this.updateIteractions();
+        this.updateMonsters();
+        this.performIteractions();
         this.drawGame();
     }
 
@@ -98,7 +104,13 @@ export class Game {
         this.player.update();
     }
 
-    private updateIteractions(): void {
+    private updateMonsters(): void {
+        for (let i = 0; i < this.monsters.length; i++) {
+            this.monsters[i].update();
+        }
+    }
+
+    private performIteractions(): void {
         // hit by an obstacle
         if (this.hasHitWith(this.obstacles, this.player.position().x, this.player.position().y, this.player.width())) {
             this.player.hit();
@@ -108,6 +120,9 @@ export class Game {
                 return;
             }
         }
+
+        // caught by a monster
+        // TODO
 
         // next level reached
         if (this.flag.reached(this.player.position().x, this.player.width())) {
@@ -123,6 +138,7 @@ export class Game {
         this.drawThings(this.obstacles, this.player.positionRelativeX());
         this.flag.draw(this.player.positionRelativeX());
         this.player.draw();
+        this.drawMonsters(this.monsters, this.player.positionRelativeX());
         this.score.draw();
         this.life.draw();
     }
@@ -130,6 +146,12 @@ export class Game {
     private drawThings(things: Thing[], position: i32): void {
         for (let i = 0; i < things.length; i++) {
             things[i].draw(position);
+        }
+    }
+
+    private drawMonsters(monsters: Monster[], position: i32): void {
+        for (let i = 0; i < monsters.length; i++) {
+            monsters[i].draw(position);
         }
     }
 
