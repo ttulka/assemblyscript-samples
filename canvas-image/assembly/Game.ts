@@ -44,9 +44,7 @@ export class Game {
         this.things = [
             new Direction(this.canvas, 2, 18)
         ];
-        this.monsters = [
-            new Fly(this.canvas, 50, 75)
-        ];
+        this.monsters = this.releaseMonsters();
         this.obstacles = this.placeObstacles();
         this.flag = new Flag(this.canvas, JOURNEY_LENGTH * this.level, 18);
     }
@@ -78,6 +76,16 @@ export class Game {
         return obstacles;
     }
 
+    private releaseMonsters(): Monster[] {
+        const monsters: Monster[] = [];
+        const startingX = this.canvas.width / 2;
+
+        for (let i = 0; i < this.level; i++) {
+            monsters.push(new Fly(this.canvas, i * JOURNEY_LENGTH + startingX, 75));
+        }
+        return monsters;
+    }
+
     private updatePlayer(control: Control): void {
         switch (control) {
             case Control.Right:
@@ -99,20 +107,20 @@ export class Game {
 
     private updateMonsters(): void {
         for (let i = 0; i < this.monsters.length; i++) {
-            this.monsters[i].update();
+            this.monsters[i].update(this.player.position().x);
         }
     }
 
     private performIteractions(): void {
-        // caught by a monster
-        if (this.wasCaught(this.monsters, this.player.position().x, this.player.position().y, this.player.width())) {
+        // chase by monsters
+        if (this.chase(this.monsters, this.player)) {
             this.player.hit();
             if (!this.player.isAlive()) {
                 return;
             }
         }
-        // hit by an obstacle
-        if (this.hasHitWith(this.obstacles, this.player.position().x, this.player.position().y, this.player.width())) {
+        // hit by obstacles
+        if (this.hitByObstacles(this.obstacles, this.player)) {
             this.player.hit();
             if (!this.player.isAlive()) {
                 return;
@@ -149,20 +157,20 @@ export class Game {
         }
     }
 
-    private hasHitWith(things: Thing[], x: i32, y: i32, width: i32): boolean {
+    private hitByObstacles(things: Thing[], player: Player): boolean {
         for (let i = 0; i < things.length; i++) {
             const thing = things[i];
-            if (thing.conflictsWith(x, y, width)) {
+            if (thing.conflictsWith(player.position().x, player.position().y, player.width())) {
                 return true;
             }
         }
         return false;
     }
 
-    private wasCaught(monsters: Monster[], x: i32, y: i32, width: i32): boolean {
+    private chase(monsters: Monster[], player: Player): boolean {
         for (let i = 0; i < monsters.length; i++) {
             const monster = monsters[i];
-            if (monster.conflictsWith(x, y, width)) {
+            if (monster.conflictsWith(player.position().x, player.position().y, player.width())) {
                 return true;
             }
         }

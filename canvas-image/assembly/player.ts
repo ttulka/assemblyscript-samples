@@ -40,6 +40,7 @@ export default class Player {
 
     start(): void {
         this.pos = new Position(this.startX, this.startY);
+        this.action = new Idle(this.pos, this.startY);        
     }
 
     update(): void {
