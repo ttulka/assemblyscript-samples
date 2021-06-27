@@ -1,4 +1,5 @@
 import Canvas from './Canvas';
+import Life from './Life';
 
 import image from './assets/player';
 
@@ -17,6 +18,7 @@ export default class Player {
 
     private canvas: Canvas;
 
+    private life: Life;
     private pos: Position;
     private action: Action;
 
@@ -24,22 +26,30 @@ export default class Player {
     private readonly startY: i32;
 
     private gotHit: boolean;
+    private alive: boolean;
 
     constructor(canvas: Canvas) {
         this.canvas = canvas;
         this.startX = this.canvas.width / 2 - WIDTH;
         this.startY = HEIGHT + 1;
+        this.life = new Life(canvas, 3, canvas.height - 3);
         this.pos = new Position(this.startX, this.startY);
         this.action = new Idle(this.pos, this.startY);        
         this.reset();
     }
 
     reset(): void {
+        this.life = new Life(this.canvas, 3, this.canvas.height - 3);
         this.pos = new Position(this.startX, this.startY);
         this.action = new Idle(this.pos, this.startY);
+        this.gotHit = false;
+        this.alive = true;
     }
 
     update(): void {
+        if (!this.action) {
+            return;
+        }
         this.action.perform();
         this.pos = this.action.position();
         this.pos.x = max(this.pos.x, this.startX);
@@ -48,6 +58,10 @@ export default class Player {
 
     draw(): void {
         this.canvas.drawImage(image, this.startX, this.pos.y, WIDTH, HEIGHT, this.gotHit);
+    }
+
+    drawLife(): void {
+        this.life.draw();
     }
 
     position(): Position {
@@ -60,6 +74,10 @@ export default class Player {
 
     width(): i32 {
         return WIDTH;
+    }
+
+    isAlive(): boolean {
+        return this.alive;
     }
 
     idle(): void {
@@ -87,7 +105,8 @@ export default class Player {
     }
 
     hit(): void {
-        this.gotHit = true;
+        this.alive = this.life.decrement() > 0;
+        this.gotHit = this.alive;   // can be hit only when still alive
     }
 }
 

@@ -21,7 +21,7 @@ export class Monster {
 
     constructor(canvas: Canvas, positionX: i32, positionY: i32, images: u8[][]) {
         this.canvas = canvas;
-        this.images = ;
+        this.images = [fly1Img, fly2Img, fly3Img];
         this.width = SIZE;
         this.height = SIZE;
         this.positionX = positionX;

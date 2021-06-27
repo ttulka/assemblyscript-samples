@@ -1,5 +1,4 @@
 import Canvas from './Canvas';
-import Life from './Life';
 import Player from './Player';
 import Scene from './Scene';
 import Score from './Score';
@@ -23,20 +22,16 @@ export class Game {
     private monsters: Monster[];
     private flag: Flag;
     private score: Score;
-    private life: Life;
 
     private level: i32 = 1;
 
     private canvas: Canvas;
-
-    private running: boolean;
 
     constructor(canvas: Canvas) {
         this.canvas = canvas;
         this.scene = new Scene(canvas);
         this.player = new Player(canvas);
         this.score = new Score(canvas, canvas.width - 3, canvas.height - 3);
-        this.life = new Life(canvas, 3, canvas.height - 3);
 
         this.things = [];
         this.obstacles = [];
@@ -54,12 +49,10 @@ export class Game {
         ];
         this.obstacles = this.placeObstacles();
         this.flag = new Flag(this.canvas, JOURNEY_LENGTH * this.level, 18);
-
-        this.running = true;
     }
 
     update(control: Control): void {
-        if (!this.running) {
+        if (!this.player.isAlive()) {
             this.canvas.turnToGray();
             return;
         }        
@@ -114,9 +107,7 @@ export class Game {
         // hit by an obstacle
         if (this.hasHitWith(this.obstacles, this.player.position().x, this.player.position().y, this.player.width())) {
             this.player.hit();
-            this.life.decrement();
-            if (this.life.isDead()) {
-                this.running = false;
+            if (!this.player.isAlive()) {
                 return;
             }
         }
@@ -140,7 +131,7 @@ export class Game {
         this.player.draw();
         this.drawMonsters(this.monsters, this.player.positionRelativeX());
         this.score.draw();
-        this.life.draw();
+        this.player.drawLife();
     }
 
     private drawThings(things: Thing[], position: i32): void {
