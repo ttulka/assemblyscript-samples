@@ -10,11 +10,12 @@ const WIDTH = 14,
 const lifes = [life1, life2, life3];
 
 export default class Life {
-    canvas: Canvas;
-    positionX: i32;
-    positionY: i32;
+    
+    private canvas: Canvas;
+    private positionX: i32;
+    private positionY: i32;
 
-    amount: i32 = 3;
+    private amount: i32 = 3;
 
     constructor(canvas: Canvas, positionX: i32, positionY: i32) {
         this.canvas = canvas;

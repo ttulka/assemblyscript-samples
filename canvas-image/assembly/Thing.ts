@@ -6,10 +6,10 @@ import directionImg from './assets/direction';
 
 export class Thing {
 
-    width: i32;
-    height: i32;
-    positionX: i32;
-    positionY: i32;
+    private width: i32;
+    private height: i32;
+    private positionX: i32;
+    private positionY: i32;
 
     private canvas: Canvas;
     private image: u8[];

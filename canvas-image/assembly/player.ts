@@ -25,8 +25,8 @@ export default class Player {
     private readonly startX: i32;
     private readonly startY: i32;
 
-    private gotHit: boolean;
-    private alive: boolean;
+    private gotHit: boolean = false;
+    private alive: boolean = true;
 
     constructor(canvas: Canvas) {
         this.canvas = canvas;
@@ -35,15 +35,11 @@ export default class Player {
         this.life = new Life(canvas, 3, canvas.height - 3);
         this.pos = new Position(this.startX, this.startY);
         this.action = new Idle(this.pos, this.startY);        
-        this.reset();
+        this.start();
     }
 
-    reset(): void {
-        this.life = new Life(this.canvas, 3, this.canvas.height - 3);
+    start(): void {
         this.pos = new Position(this.startX, this.startY);
-        this.action = new Idle(this.pos, this.startY);
-        this.gotHit = false;
-        this.alive = true;
     }
 
     update(): void {

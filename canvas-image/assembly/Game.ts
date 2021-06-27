@@ -40,7 +40,7 @@ export class Game {
     }
 
     start(): void {
-        this.player.reset();
+        this.player.start();
         this.things = [
             new Direction(this.canvas, 2, 18)
         ];
@@ -104,6 +104,13 @@ export class Game {
     }
 
     private performIteractions(): void {
+        // caught by a monster
+        if (this.wasCaught(this.monsters, this.player.position().x, this.player.position().y, this.player.width())) {
+            this.player.hit();
+            if (!this.player.isAlive()) {
+                return;
+            }
+        }
         // hit by an obstacle
         if (this.hasHitWith(this.obstacles, this.player.position().x, this.player.position().y, this.player.width())) {
             this.player.hit();
@@ -111,10 +118,6 @@ export class Game {
                 return;
             }
         }
-
-        // caught by a monster
-        // TODO
-
         // next level reached
         if (this.flag.reached(this.player.position().x, this.player.width())) {
             this.level++;
@@ -150,6 +153,16 @@ export class Game {
         for (let i = 0; i < things.length; i++) {
             const thing = things[i];
             if (thing.conflictsWith(x, y, width)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private wasCaught(monsters: Monster[], x: i32, y: i32, width: i32): boolean {
+        for (let i = 0; i < monsters.length; i++) {
+            const monster = monsters[i];
+            if (monster.conflictsWith(x, y, width)) {
                 return true;
             }
         }

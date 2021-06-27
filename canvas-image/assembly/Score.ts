@@ -17,11 +17,12 @@ const WIDTH = 12,
 const digits = [digit0, digit1, digit2, digit3, digit4, digit5, digit6, digit7, digit8, digit9];
 
 export default class Score {
-    canvas: Canvas;
-    positionX: i32;
-    positionY: i32;
+    
+    private canvas: Canvas;
+    private positionX: i32;
+    private positionY: i32;
 
-    amount: i32;
+    private amount: i32;
 
     constructor(canvas: Canvas, positionX: i32, positionY: i32) {
         this.canvas = canvas;
