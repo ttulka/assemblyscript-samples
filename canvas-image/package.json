@@ -12,10 +12,10 @@
   "author": "Tomas Tulka (ttulka)",
   "license": "MIT",
   "dependencies": {
-    "@assemblyscript/loader": "^0.19.3"
+    "@assemblyscript/loader": "^0.19.4"
   },
   "devDependencies": {
-    "assemblyscript": "^0.19.3",
+    "assemblyscript": "^0.19.4",
     "get-image-data": "^5.0.0",
     "local-web-server": "^4.2.1"
   }
