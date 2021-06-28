@@ -1,6 +1,6 @@
-# Canvas Images with AssemblyScript
+# Parallax Scrolling with AssemblyScript
 
-This demo project show rendering images on a HTML canvas in multiple layers as parallax scrolling.
+This demo project show rendering images on a **HTML canvas** in multiple layers as parallax scrolling.
 
 ![Preview](parallax_preview.gif)
 
