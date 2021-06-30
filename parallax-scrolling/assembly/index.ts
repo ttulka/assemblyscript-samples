@@ -5,9 +5,10 @@ import ground from './assets/ground';
 const WIDTH = 100, 
       HEIGHT = 100;
 
-export enum Control {
-    Right = 1,
-    Left = 2,
+export enum Controls {
+    None,
+    Right,
+    Left
 }
 
 let position: i32;
@@ -16,12 +17,12 @@ export function start(): void {
     position = 0;
 }
 
-export function update(control: Control): void {
+export function update(control: Controls): void {
     switch (control) {
-        case Control.Right:
+        case Controls.Right:
             position++;
             break;
-        case Control.Left:
+        case Controls.Left:
             position = max(position - 1, 0);
             break;
     }

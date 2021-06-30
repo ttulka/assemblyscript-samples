@@ -8,9 +8,9 @@ canvas.height = HEIGHT;
 start();
 
 const Controls = {
-  None: 0,
-  Right: 1,
-  Left: 2
+  None: 'Controls.None',
+  Right: 'Controls.Right',
+  Left: 'Controls.Left'
 }
 
 let control = Controls.None;
@@ -49,8 +49,8 @@ async function start() {
 }
 
 function update(wasm, imageData) {
-  //console.log('update', new Date())
-  wasm.update(control);    
+  //console.log('update', new Date(), control)
+  wasm.update(wasm[control]);    
       
   //control = Controls.None;  // reset control
   control = control == Controls.None ? Controls.Right : control;   // move constantly
