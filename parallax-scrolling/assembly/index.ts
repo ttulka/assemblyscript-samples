@@ -1,6 +1,6 @@
 import sky from './assets/sky';
 import forest from './assets/forest';
-import soil from './assets/soil';
+import ground from './assets/ground';
 
 const WIDTH = 100, 
       HEIGHT = 100;
@@ -27,7 +27,7 @@ export function update(control: Control): void {
     }
     drawLayer(sky);
     drawLayer(forest, position, 5);
-    drawLayer(soil, position, 1);
+    drawLayer(ground, position, 1);
 }
 
 function drawLayer(image: u8[], offset: i32 = 0, speed: i32 = 0): void {
