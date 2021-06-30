@@ -1,13 +1,12 @@
 const image = require("get-image-data");
 
 const filename = process.argv[2] || "./image.png";
- 
-image(filename, function (err, info) {
-  const data = info.data;
-  // const width = info.width;
-  // const height = info.height;
 
-  process.stdout.write("const image: u8[] = [");
+const out = process.stdout;
+ 
+image(filename, function (err, {data}) {
+  
+  out.write("const image: u8[] = [");
  
   for (var i = 0, l = data.length; i < l; i += 4) {
     const r = data[i];
@@ -15,9 +14,9 @@ image(filename, function (err, info) {
     const b = data[i + 2];
     const a = data[i + 3];
    
-    process.stdout.write(`${r}, ${g}, ${b}, ${a}, `);
+    out.write(`${r}, ${g}, ${b}, ${a}, `);
   }
 
-  process.stdout.write("];\n");
-  process.stdout.write("export default image;\n");
+  out.write("];\n");
+  out.write("export default image;\n");
 })
