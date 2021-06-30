@@ -44,28 +44,21 @@ async function start() {
 
   const imageData = ctx.getImageData(0, 0, WIDTH, HEIGHT);
 
-  const renderCall = () => writeImageData(imageData, wasm.memory.buffer);
-  const updateCall = () => update(wasm, renderCall);
-
+  const updateCall = () => update(wasm, imageData);
   setInterval(updateCall, 60);
 }
 
-function update(wasm, render) {
-    //console.log('update', new Date())
-    wasm.update(control);    
-    
-    //control = Controls.None;  // reset control
-    control = control == Controls.None ? Controls.Right : control;   // move constantly
+function update(wasm, imageData) {
+  //console.log('update', new Date())
+  wasm.update(control);    
+      
+  //control = Controls.None;  // reset control
+  control = control == Controls.None ? Controls.Right : control;   // move constantly
 
-    render();
-}
-
-function writeImageData(imageData, buffer) {
-  const bytes = new Uint8ClampedArray(buffer);
-  const data = imageData.data;
+  const bytes = new Uint8ClampedArray(wasm.memory.buffer);
 
   for (let i = 0; i < WIDTH * HEIGHT * 4; i++) 
-     data[i] = bytes[i];
+    imageData.data[i] = bytes[i];
 
   ctx.putImageData(imageData, 0, 0);
 }
