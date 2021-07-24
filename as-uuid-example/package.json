@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "@assemblyscript/loader": "^0.19.7",
-    "as-uuid": "^0.0.1"
+    "as-uuid": "^0.0.2"
   },
   "devDependencies": {
     "assemblyscript": "^0.19.7"
