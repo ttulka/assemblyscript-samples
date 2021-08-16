@@ -1,0 +1,17 @@
+{
+  "name": "transform-rgba-image",
+  "version": "1.0.0",
+  "description": "Samples ASC transform that inlines an image content as an RGBA array.",
+  "author": "Tomas Tulka (ttulka)",
+  "types": "types.ts",
+  "main": "index.js",
+  "license": "MIT",
+  "peerDependencies": {
+    "assemblyscript": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^16.6.1",
+    "pngjs": "^6.0.0",
+    "visitor-as": "^0.6.0"
+  }
+}
