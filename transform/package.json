@@ -1,17 +1,21 @@
 {
-  "name": "transform-rgba-image",
+  "name": "example-transform-rgba-image",
   "version": "1.0.0",
-  "description": "Samples ASC transform that inlines an image content as an RGBA array.",
-  "author": "Tomas Tulka (ttulka)",
-  "types": "types.ts",
+  "description": "",
   "main": "index.js",
+  "scripts": {
+    "test": "node tests",
+    "asbuild:untouched": "asc assembly/index.ts --target debug",
+    "asbuild:optimized": "asc assembly/index.ts --target release",
+    "asbuild": "npm run asbuild:untouched && npm run asbuild:optimized"
+  },
+  "author": "Tomas Tulka (ttulka)",
   "license": "MIT",
-  "peerDependencies": {
-    "assemblyscript": "*"
+  "dependencies": {
+    "@assemblyscript/loader": "^0.19.11"
   },
   "devDependencies": {
-    "@types/node": "^16.6.1",
-    "pngjs": "^6.0.0",
-    "visitor-as": "^0.6.0"
+    "as-inliner-image": "^0.0.1",
+    "assemblyscript": "^0.19.11"
   }
 }
