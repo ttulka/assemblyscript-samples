@@ -4,7 +4,7 @@ import {FRUIT, BRICK, SNAKE_HEAD, SNAKE_BODY} from "./assets";
 
 const TILE_SIZE: u8 = 8;
 const GAME_SIZE: u8 = 160 / TILE_SIZE;
-const MOVE_DURATION_FRAMES = 12;
+const MOVE_DURATION_FRAMES: u8 = 12;
 
 store<u32>(w4.PALETTE, 0xe0f8cf, 0);    // light
 store<u32>(w4.PALETTE, 0x7c3f58, 4);    // red
@@ -23,11 +23,11 @@ class Game {
     private readonly snake: Snake = new Snake();
     private fruit: Fruit = this.placeFruit();
 
-    private score: i32 = 0;
+    private score: u16 = 0;
     private gameover: boolean = false;
 
     private previousGamepad: u8 = 0;
-    private moveDelay: i32 = 0
+    private moveDelay: u8 = 0
 
     update(): void {
         if (this.gameover) {   
@@ -53,7 +53,6 @@ class Game {
 
         this.drawWalls();
         this.drawStats();
-
     }
 
     private gamepadControl(): void {
