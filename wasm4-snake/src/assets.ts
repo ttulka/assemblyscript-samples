@@ -32,8 +32,8 @@ const SNAKE_HEAD = memory.data<u8>([
 ]);
 
 const SNAKE_BODY = memory.data<u8>([
-    0b11000011,
     0b10000001,
+    0b00000000,
     0b00000000,
     0b00000000,
     0b00000000,

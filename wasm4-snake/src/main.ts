@@ -41,8 +41,7 @@ class Game {
         }
         this.moveDelay = MOVE_DURATION_FRAMES;
         
-        this.snake.move();  
-        this.gameover = this.snake.hasFailed();
+        this.moveSnake();
         
         this.checkCollisions();
     }
@@ -74,11 +73,25 @@ class Game {
         }
     }
 
+    private moveSnake(): void {
+        const moved = this.snake.move();  
+        this.gameover = this.snake.hasFailed();
+
+        if (this.gameover) {
+            w4.tone(140 | (20 << 16), 100, 60, w4.TONE_PULSE1 | w4.TONE_MODE1);
+        } else if (moved) {
+            w4.tone(120, 50, 10, w4.TONE_TRIANGLE);
+        }
+
+    }
+
     private checkCollisions(): void {
         if (this.snake.collides(this.fruit.position)) {
             this.score++;
             this.snake.grow();
             this.fruit = this.placeFruit();
+
+            w4.tone(20 | (60 << 16), 50, 10, w4.TONE_PULSE2 | w4.TONE_MODE3);
         }
     }
 
@@ -125,16 +138,16 @@ class Snake {
     private growing: boolean = false;
     private failed: boolean = false;
 
-    move(): void {
+    move(): boolean {
         if (this.failed || Direction.NONE == this.direction) {
-            return;
+            return false;
         }
         const head = this.body[0];
         const newHead = new Position(head.x + this.direction.x, head.y + this.direction.y);
         
         if (this.hits(newHead)) {
             this.failed = true;
-            return;
+            return false;
         }
 
         this.body.unshift(newHead);
@@ -142,6 +155,8 @@ class Snake {
             this.body.pop();
         }
         this.growing = false;
+
+        return true;
     }
 
     turn(direction: Direction): void {
