@@ -4,7 +4,7 @@ import {FRUIT, BRICK, SNAKE_HEAD, SNAKE_BODY} from "./assets";
 
 const TILE_SIZE: u8 = 8;
 const GAME_SIZE: u8 = 160 / TILE_SIZE;
-const MOVE_DURATION_FRAMES = 5;
+const MOVE_DURATION_FRAMES = 12;
 
 store<u32>(w4.PALETTE, 0xe0f8cf, 0);    // light
 store<u32>(w4.PALETTE, 0x7c3f58, 4);    // red
@@ -38,10 +38,10 @@ class Game {
             } else {
                 this.moveDelay = MOVE_DURATION_FRAMES;
              
-                this.snake.move();      
+                this.snake.move();  
+                this.gameover = this.snake.hasFailed();
              
                 this.checkCollisions();
-                this.checkHits();
             }
         }
 
@@ -58,16 +58,16 @@ class Game {
         this.previousGamepad = gamepad;
 
         if (pressed & w4.BUTTON_RIGHT) {
-            this.snake.direction = Direction.RIGHT;
+            this.snake.turn(Direction.RIGHT);
         }
         if (pressed & w4.BUTTON_LEFT) {
-            this.snake.direction = Direction.LEFT;
+            this.snake.turn(Direction.LEFT);
         }
         if (pressed & w4.BUTTON_UP) {
-            this.snake.direction = Direction.UP;
+            this.snake.turn(Direction.UP);
         }
         if (pressed & w4.BUTTON_DOWN) {
-            this.snake.direction = Direction.DOWN;
+            this.snake.turn(Direction.DOWN);
         }
     }
 
@@ -76,17 +76,6 @@ class Game {
             this.score++;
             this.snake.grow();
             this.fruit = this.placeFruit();
-        }
-    }
-
-    private checkHits(): void {
-        const head = this.snake.head();
-        if (this.snake.hitsSelf()
-                || head.x < 1 || head.x > GAME_SIZE - 2 
-                || head.y < 1 || head.y > GAME_SIZE - 2) {
-                    w4.trace("HIT " + head.x.toString() + ", " + head.y.toString())
-            this.snake.unmove();
-            this.gameover = true;
         }
     }
 
@@ -127,37 +116,37 @@ class Game {
 }
 
 class Snake {
-    readonly body: Position[] = [new Position(GAME_SIZE / 2, GAME_SIZE / 2)];
-    direction: Direction = Direction.NONE; 
+    private readonly body: Position[] = [new Position(GAME_SIZE / 2, GAME_SIZE / 2)];
+    private direction: Direction = Direction.NONE; 
 
     private growing: boolean = false;
-
-    head(): Position {
-        return this.body[0];
-    }
-
-    grow(): void {
-        this.growing = true;
-    }
+    private failed: boolean = false;
 
     move(): void {
-        if (Direction.NONE == this.direction) {
+        if (this.failed || Direction.NONE == this.direction) {
             return;
         }
         const head = this.body[0];
         const newHead = new Position(head.x + this.direction.x, head.y + this.direction.y);
+        
+        if (this.hits(newHead)) {
+            this.failed = true;
+            return;
+        }
+
         this.body.unshift(newHead);
-        if (!this.growing && !this.hitsSelf()) {
+        if (!this.growing) {
             this.body.pop();
         }
         this.growing = false;
     }
-    
-    unmove(): void {
-        const current = this.direction;
-        this.direction = current.negative();
-        this.move();
-        this.direction = current;
+
+    turn(direction: Direction): void {
+        this.direction = direction;
+    }
+
+    grow(): void {
+        this.growing = true;
     }
 
     collides(other: Position, justHead: boolean = true): boolean {
@@ -169,9 +158,16 @@ class Snake {
         return false;
     }
 
-    hitsSelf(): boolean {
+    hasFailed(): boolean {
+        return this.failed;
+    }
+
+    private hits(head: Position): boolean {
+        if (head.x < 1 || head.x > GAME_SIZE - 2 || head.y < 1 || head.y > GAME_SIZE - 2) {
+            return true;
+        }
         for (let i = 1; i < this.body.length; i++) {
-            if (this.body[i].equals(this.body[0])) {
+            if (this.body[i].equals(head)) {
                 return true;
             }
         }
@@ -180,15 +176,13 @@ class Snake {
 
     draw(): void {
         store<u16>(w4.DRAW_COLORS, 0x13);
-        // tail first
-        for (let i = 1; i < this.body.length; i++) {
-            w4.blit(SNAKE_BODY, this.body[i].x * TILE_SIZE, this.body[i].y * TILE_SIZE, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP);
-        }
-        // head afterwards to show a potential self-hit
         w4.blit(SNAKE_HEAD, this.body[0].x * TILE_SIZE, this.body[0].y * TILE_SIZE, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP 
             | (this.direction.y > 0 ? w4.BLIT_FLIP_Y : 0)
             | (this.direction.x > 0 ? w4.BLIT_FLIP_Y | w4.BLIT_ROTATE : 0)
             | (this.direction.x < 0 ? w4.BLIT_ROTATE : 0));
+        for (let i = 1; i < this.body.length; i++) {
+            w4.blit(SNAKE_BODY, this.body[i].x * TILE_SIZE, this.body[i].y * TILE_SIZE, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP);
+        }
     }
 }
 
@@ -200,7 +194,7 @@ class Fruit {
         w4.blit(FRUIT, this.position.x * TILE_SIZE, this.position.y * TILE_SIZE, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP);
     }
 
-    static distribute(): Position {
+    private static distribute(): Position {
         const min = 1;
         const max = GAME_SIZE - 3;
         return new Position(
@@ -237,9 +231,5 @@ class Direction {
     private constructor(x: i8, y: i8) {        
         this.x = x;
         this.y = y;
-    }
-
-    negative(): Direction {
-        return new Direction(-this.x, -this.y);
     }
 }
