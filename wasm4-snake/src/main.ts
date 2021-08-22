@@ -8,13 +8,14 @@ const MOVE_DURATION_FRAMES = 12;
 
 store<u32>(w4.PALETTE, 0xe0f8cf, 0);    // light
 store<u32>(w4.PALETTE, 0x7c3f58, 4);    // red
-store<u32>(w4.PALETTE, 0x86c06c, 8);    // green
-store<u32>(w4.PALETTE, 0x306850, 12);   // dark
+store<u32>(w4.PALETTE, 0x306850, 8);    // dark
+store<u32>(w4.PALETTE, 0x86c06c, 12);   // green
 
 const game = new Game();
 
 export function update(): void {
     game.update();
+    game.draw();
 }
 
 class Game {
@@ -29,27 +30,30 @@ class Game {
     private moveDelay: i32 = 0
 
     update(): void {
-        if (!this.gameover) {            
-            this.gamepadControl();
+        if (this.gameover) {   
+            return;
+        }         
+        this.gamepadControl();
 
-            if (this.moveDelay > 0) {
-                this.moveDelay--;
-
-            } else {
-                this.moveDelay = MOVE_DURATION_FRAMES;
-             
-                this.snake.move();  
-                this.gameover = this.snake.hasFailed();
-             
-                this.checkCollisions();
-            }
+        if (this.moveDelay > 0) {
+            this.moveDelay--;
+            return;
         }
+        this.moveDelay = MOVE_DURATION_FRAMES;
+        
+        this.snake.move();  
+        this.gameover = this.snake.hasFailed();
+        
+        this.checkCollisions();
+    }
 
+    draw(): void {
         this.fruit.draw();
         this.snake.draw();
 
         this.drawWalls();
         this.drawStats();
+
     }
 
     private gamepadControl(): void {
