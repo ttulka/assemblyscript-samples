@@ -2,8 +2,8 @@ import * as w4 from "./wasm4";
 
 import {FRUIT, BRICK, SNAKE_HEAD, SNAKE_BODY} from "./assets";
 
-const SCREEN_SIZE: u8 = 160;
 const TILE_SIZE: u8 = 8;
+const GAME_SIZE: u8 = 160 / TILE_SIZE;
 const MOVE_DURATION_FRAMES = 5;
 
 store<u32>(w4.PALETTE, 0xe0f8cf, 0);    // light
@@ -82,8 +82,9 @@ class Game {
     private checkHits(): void {
         const head = this.snake.head();
         if (this.snake.hitsSelf()
-                || head.x < TILE_SIZE || head.x > SCREEN_SIZE - TILE_SIZE * 2 
-                || head.y < TILE_SIZE || head.y > SCREEN_SIZE - TILE_SIZE * 2) {
+                || head.x < 1 || head.x > GAME_SIZE - 2 
+                || head.y < 1 || head.y > GAME_SIZE - 2) {
+                    w4.trace("HIT " + head.x.toString() + ", " + head.y.toString())
             this.snake.unmove();
             this.gameover = true;
         }
@@ -113,20 +114,20 @@ class Game {
     private drawWalls(): void {
         store<u16>(w4.DRAW_COLORS, 4);
     
-        for (let i: u8 = 0; i < SCREEN_SIZE; i += TILE_SIZE) {
-            w4.blit(BRICK, i, 0, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP | w4.BLIT_FLIP_Y);
-            w4.blit(BRICK, i, SCREEN_SIZE - TILE_SIZE, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP);
+        for (let i: u8 = 0; i < GAME_SIZE; i++) {
+            w4.blit(BRICK, i * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP | w4.BLIT_FLIP_Y);
+            w4.blit(BRICK, i * TILE_SIZE, (GAME_SIZE - 1) * TILE_SIZE, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP);
     
-            if (i > 0 && i < SCREEN_SIZE - TILE_SIZE) {
-                w4.blit(BRICK, 0, i, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP | w4.BLIT_FLIP_Y | w4.BLIT_ROTATE);
-                w4.blit(BRICK, SCREEN_SIZE - TILE_SIZE, i, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP | w4.BLIT_ROTATE);
+            if (i > 0 && i < GAME_SIZE - 1) {
+                w4.blit(BRICK, 0, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP | w4.BLIT_FLIP_Y | w4.BLIT_ROTATE);
+                w4.blit(BRICK, (GAME_SIZE - 1) * TILE_SIZE, i * TILE_SIZE, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP | w4.BLIT_ROTATE);
             }
         }
     }
 }
 
 class Snake {
-    readonly body: Position[] = [new Position(80, 80)];
+    readonly body: Position[] = [new Position(GAME_SIZE / 2, GAME_SIZE / 2)];
     direction: Direction = Direction.NONE; 
 
     private growing: boolean = false;
@@ -181,10 +182,10 @@ class Snake {
         store<u16>(w4.DRAW_COLORS, 0x13);
         // tail first
         for (let i = 1; i < this.body.length; i++) {
-            w4.blit(SNAKE_BODY, this.body[i].x, this.body[i].y, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP);
+            w4.blit(SNAKE_BODY, this.body[i].x * TILE_SIZE, this.body[i].y * TILE_SIZE, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP);
         }
         // head afterwards to show a potential self-hit
-        w4.blit(SNAKE_HEAD, this.body[0].x, this.body[0].y, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP 
+        w4.blit(SNAKE_HEAD, this.body[0].x * TILE_SIZE, this.body[0].y * TILE_SIZE, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP 
             | (this.direction.y > 0 ? w4.BLIT_FLIP_Y : 0)
             | (this.direction.x > 0 ? w4.BLIT_FLIP_Y | w4.BLIT_ROTATE : 0)
             | (this.direction.x < 0 ? w4.BLIT_ROTATE : 0));
@@ -196,15 +197,15 @@ class Fruit {
 
     draw(): void {
         store<u16>(w4.DRAW_COLORS, 2);
-        w4.blit(FRUIT, this.position.x, this.position.y, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP);
+        w4.blit(FRUIT, this.position.x * TILE_SIZE, this.position.y * TILE_SIZE, TILE_SIZE, TILE_SIZE, w4.BLIT_1BPP);
     }
 
     static distribute(): Position {
         const min = 1;
-        const max = SCREEN_SIZE / TILE_SIZE - 3;
+        const max = GAME_SIZE - 3;
         return new Position(
-            u8(Math.random() * max + min) * TILE_SIZE,
-            u8(Math.random() * max + min) * TILE_SIZE
+            u8(Math.random() * max + min),
+            u8(Math.random() * max + min)
         );
     }
 }
@@ -225,10 +226,10 @@ class Position {
 
 class Direction {
     static NONE: Direction = new Direction(0, 0);
-    static RIGHT: Direction = new Direction(TILE_SIZE, 0);
-    static LEFT: Direction = new Direction(-TILE_SIZE, 0);
-    static UP: Direction = new Direction(0, -TILE_SIZE);
-    static DOWN: Direction = new Direction(0, TILE_SIZE);
+    static RIGHT: Direction = new Direction(1, 0);
+    static LEFT: Direction = new Direction(-1, 0);
+    static UP: Direction = new Direction(0, -1);
+    static DOWN: Direction = new Direction(0, 1);
 
     readonly x: i8;
     readonly y: i8;
