@@ -3,23 +3,28 @@ import * as w4 from "./wasm4";
 import {FRUIT, BRICK, SNAKE_HEAD, SNAKE_BODY} from "./assets";
 
 const TILE_SIZE: u8 = 8;
-const GAME_SIZE: u8 = 160 / TILE_SIZE;
+const GAME_SIZE: u8 = u8(w4.SCREEN_SIZE / TILE_SIZE);
 const MOVE_DURATION_FRAMES: u8 = 12;
 
-store<u32>(w4.PALETTE, 0xe0f8cf, 0);    // light
-store<u32>(w4.PALETTE, 0x7c3f58, 4);    // red
-store<u32>(w4.PALETTE, 0x306850, 8);    // dark
-store<u32>(w4.PALETTE, 0x86c06c, 12);   // green
+store<u32>(w4.PALETTE, 0xe0f8cf, 0 * sizeof<u32>());   // light
+store<u32>(w4.PALETTE, 0x7c3f58, 1 * sizeof<u32>());   // red
+store<u32>(w4.PALETTE, 0x306850, 2 * sizeof<u32>());   // dark
+store<u32>(w4.PALETTE, 0x86c06c, 3 * sizeof<u32>());   // green
 
-const game = new Game();
+let game = new Game();
 
 export function update(): void {
+    if (game.isGameOver()) {
+        const gamepad = load<u8>(w4.GAMEPAD1);
+        if (gamepad & w4.BUTTON_1) {
+            game = new Game();
+        }
+    }
     game.update();
     game.draw();
 }
 
 class Game {
-
     private readonly snake: Snake = new Snake();
     private fruit: Fruit = this.placeFruit();
 
@@ -32,8 +37,9 @@ class Game {
     update(): void {
         if (this.gameover) {   
             return;
-        }         
-        this.gamepadControl();
+        }     
+
+        this.gamepadControl();   
 
         if (this.moveDelay > 0) {
             this.moveDelay--;
@@ -54,6 +60,10 @@ class Game {
         this.drawStats();
     }
 
+    isGameOver(): boolean {
+        return this.gameover;
+    }
+
     private gamepadControl(): void {
         const gamepad = load<u8>(w4.GAMEPAD1);
         const pressed = gamepad & (gamepad ^ this.previousGamepad);
@@ -62,27 +72,24 @@ class Game {
         if (pressed & w4.BUTTON_RIGHT) {
             this.snake.turn(Direction.RIGHT);
         }
-        if (pressed & w4.BUTTON_LEFT) {
+        else if (pressed & w4.BUTTON_LEFT) {
             this.snake.turn(Direction.LEFT);
         }
-        if (pressed & w4.BUTTON_UP) {
+        else if (pressed & w4.BUTTON_UP) {
             this.snake.turn(Direction.UP);
         }
-        if (pressed & w4.BUTTON_DOWN) {
+        else if (pressed & w4.BUTTON_DOWN) {
             this.snake.turn(Direction.DOWN);
         }
     }
 
     private moveSnake(): void {
-        const moved = this.snake.move();  
+        this.snake.move();  
         this.gameover = this.snake.hasFailed();
 
         if (this.gameover) {
             w4.tone(140 | (20 << 16), 100, 60, w4.TONE_PULSE1 | w4.TONE_MODE1);
-        } else if (moved) {
-            w4.tone(120, 50, 10, w4.TONE_TRIANGLE);
         }
-
     }
 
     private checkCollisions(): void {
@@ -91,7 +98,7 @@ class Game {
             this.snake.grow();
             this.fruit = this.placeFruit();
 
-            w4.tone(20 | (60 << 16), 50, 10, w4.TONE_PULSE2 | w4.TONE_MODE3);
+            w4.tone(20 | (60 << 16), 80, 10, w4.TONE_PULSE2 | w4.TONE_MODE3);
         }
     }
 
@@ -110,9 +117,10 @@ class Game {
 
         if (this.gameover) {
             store<u16>(w4.DRAW_COLORS, 0x44);
-            w4.rect(30, 55, 100, 16);
+            w4.rect(30, 56, 100, 25);
             store<u16>(w4.DRAW_COLORS, 0x41);
-            w4.text("GAME OVER!", 40, 60);
+            w4.text("GAME OVER", 43, 60);
+            w4.text(" press X ", 43, 70);
         }
     }
 
@@ -138,16 +146,16 @@ class Snake {
     private growing: boolean = false;
     private failed: boolean = false;
 
-    move(): boolean {
+    move(): void {
         if (this.failed || Direction.NONE == this.direction) {
-            return false;
+            return;
         }
         const head = this.body[0];
         const newHead = new Position(head.x + this.direction.x, head.y + this.direction.y);
         
         if (this.hits(newHead)) {
             this.failed = true;
-            return false;
+            return;
         }
 
         this.body.unshift(newHead);
@@ -155,8 +163,6 @@ class Snake {
             this.body.pop();
         }
         this.growing = false;
-
-        return true;
     }
 
     turn(direction: Direction): void {
