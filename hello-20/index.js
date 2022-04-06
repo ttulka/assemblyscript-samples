@@ -19,7 +19,7 @@ var module = await (
 var imports = {
     env: {
         "console.log": console.log,
-        abort: () => {}
+        abort: m => { /* ... */ }
     }
 }
 
@@ -28,7 +28,8 @@ const { exports: {
     __new, __pin, __unpin
 }} = await WebAssembly.instantiate(module, imports);
 
-var input = "Tomas";
+// strings in AS are UTF-16 encoded
+var input = "Україна💙💛";
 var length = input.length;
 
 // allocate memory (usize, string [class id=1])
@@ -45,16 +46,27 @@ var pti = __pin(pt);
 // call wasm
 var pto = __pin(hello2(pti));
 
-// retrieve string size (uint is 32-bit)
+// retrieve string lenght in bytes (uint is 32-bit)
 var SIZE_OFFSET = -4;
 var olength = new Uint32Array(memory.buffer)[pto + SIZE_OFFSET >>> 2];
 
-// load string from memory
-var obytes = new Uint8Array(memory.buffer, pto, olength);
-var str = new TextDecoder('utf8').decode(obytes);
+// load string from memory ()
+var obytes = new Uint16Array(
+    memory.buffer, 
+    pto, 
+    olength >>> 1  // 8-bit to 16-bit
+);
+var str = utf16_to_string(obytes);
 
 // unpin objects for GC
 __unpin(pti);
 __unpin(pto);
 
 console.log(str);
+
+function utf16_to_string(uint16_array) {
+  var str = "";
+  for (var i=0; i < uint16_array.length; i++) 
+    str += String.fromCharCode(uint16_array[i]);
+  return str;
+}
